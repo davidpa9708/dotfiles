@@ -7,7 +7,6 @@
     stateVersion = "23.11";
     
     packages = with pkgs; [
-      
       emacs29
       git
       micro
@@ -17,18 +16,18 @@
       logseq
       starship
       # android-tools
-      
     ];
      
     shellAliases = {
       ne = "sudo -E emacs /etc/nixos/configuration.nix";
-      nr = "sudo nixos-rebuild switch";     
+      nr = "sudo nixos-rebuild switch";
+      he = "emacs ~/.config/home-manager/home.nix";
+      hr = "home-manager switch";
     };
     
     # (pkgs.writeShellScriptBin "my-hello" ''
     #   echo "Hello, ${config.home.username}!"
     # '')
-    
     
     # Home Manager is pretty good at managing dotfiles. The primary way to manage
     # plain files is through 'home.file'.
@@ -51,6 +50,7 @@
   };
   
   programs = {
+    bash.enable = true;
     fish.enable = true;
     starship.enable = true;
     starship.enableFishIntegration = true;
@@ -75,9 +75,8 @@
   #
   #  /etc/profiles/per-user/david/etc/profile.d/hm-session-vars.sh
   #
-
+  
   nixpkgs.config.permittedInsecurePackages = [
     "electron-25.9.0"
   ];
-
 }
