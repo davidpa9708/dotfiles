@@ -16,6 +16,7 @@
       starship
       # android-tools
       nixfmt
+      syncthing
     ];
 
     shellAliases = {
@@ -42,7 +43,7 @@
         } $HOME/.emacs.d/
         $DRY_RUN_CMD ln -fs $VERBOSE_ARG ${
           builtins.toPath ./.
-        } $HOME/.config/home-manager
+        } $HOME/.config/home-manager/
       '';
     };
 
