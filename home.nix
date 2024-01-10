@@ -7,6 +7,7 @@
 
     packages = with pkgs; [
       emacs29
+      #emacs29-nox
       git
       micro
       signal-desktop
@@ -17,6 +18,9 @@
       # android-tools
       nixfmt
       syncthing
+      slack
+      thunderbird
+      vscodium
     ];
 
     shellAliases = {
@@ -59,8 +63,16 @@
       userName = "David Perez Alvarez";
       userEmail = "david@leddgroup.com";
     };
+    direnv = {
+      enable = true;
+      nix-direnv.enable = true;
+      #enableBashIntegration = true; # see note on other shells below
+      #enableFishIntegration = true;
+    };
     home-manager.enable = true;
   };
 
-  nixpkgs.config.permittedInsecurePackages = [ "electron-25.9.0" ];
+  nixpkgs.config.permittedInsecurePackages = [ "electron-25.9.0" ]; # logseq
+  nixpkgs.config.allowUnfreePredicate = pkg:
+    builtins.elem (lib.getName pkg) [ "slack" ];
 }

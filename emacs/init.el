@@ -84,3 +84,8 @@
   :ensure t
   :config
   (apheleia-global-mode))
+
+(use-package envrc
+  :ensure t
+  :config
+  (envrc-global-mode))
