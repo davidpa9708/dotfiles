@@ -37,9 +37,12 @@
 
     activation = {
       myActivationAction = lib.hm.dag.entryAfter [ "writeBoundary" ] ''
-        $DRY_RUN_CMD ln -s $VERBOSE_ARG ${
+        $DRY_RUN_CMD ln -fs $VERBOSE_ARG ${
           builtins.toPath ./emacs
-        } $HOME/.emacs.d/     
+        } $HOME/.emacs.d/
+        $DRY_RUN_CMD ln -fs $VERBOSE_ARG ${
+          builtins.toPath ./.
+        } $HOME/.config/home-manager
       '';
     };
 
