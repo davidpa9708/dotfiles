@@ -11,5 +11,7 @@ nix-shell '<home-manager>' -A install
 
 git clone https://github.com/davidpa9708/dotfiles.git
 
+rm -rf ~/.config/home-manager
+
 home-manager switch dotfiles
 ```
