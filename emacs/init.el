@@ -89,3 +89,9 @@
   :ensure t
   :config
   (envrc-global-mode))
+
+(use-package dirvish
+  :ensure t
+  :config
+  (dirvish-override-dired-mode))
+

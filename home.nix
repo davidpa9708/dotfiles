@@ -21,6 +21,13 @@
       slack
       thunderbird
       vscodium
+      godot_4
+      ungoogled-chromium
+      gimp
+      blender
+      obs-studio
+      vlc
+      protonvpn-cli_2
     ];
 
     shellAliases = {
@@ -38,7 +45,7 @@
     # plain files is through 'home.file'.
     file = { };
 
-    sessionVariables = { EDITOR = "emacsclient"; };
+    sessionVariables = { EDITOR = "emacs"; };
 
     activation = {
       myActivationAction = lib.hm.dag.entryAfter [ "writeBoundary" ] ''
