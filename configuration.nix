@@ -7,6 +7,8 @@
 
   # time.timeZone = "Europe/Amsterdam";
 
+  programs.nix-ld.enable = true;
+
   services.ntp.enable = true;
 
   services.xserver.enable = true;
@@ -14,7 +16,6 @@
   services.xserver.desktopManager.plasma5.enable = true;
 
   programs.hyprland.enable = true;
-  programs.nix-ld.enable = true;
 
   # Enable sound.
   sound.enable = true;
@@ -34,9 +35,9 @@
   hardware.bumblebee.driver = "nouveau";
 
   virtualisation.docker.enable = true;
-  virtualisation.docker.rootless = {
-    enable = true;
-    setSocketVariable = true;
-  };
-
+  #virtualisation.docker.rootless = {
+  #  enable = true;
+  #  setSocketVariable = true;
+  #};
+  #services.traefik.group = "docker";
 }

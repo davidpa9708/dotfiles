@@ -5,7 +5,7 @@
     homeDirectory = "/home/david";
     stateVersion = "23.11";
 
-    packages = with pkgs; [
+    packages = (with pkgs; [
       emacs29
       #emacs29-nox
       git
@@ -28,7 +28,19 @@
       obs-studio
       vlc
       protonvpn-cli_2
-    ];
+      mongodb-compass
+      spotify
+    ]) ++ (with pkgs.nodePackages_latest; [
+      npm-check-updates
+      prettier
+      typescript
+      typescript-language-server
+      vscode-langservers-extracted
+      yaml-language-server
+      bash-language-server
+      dockerfile-language-server-nodejs
+      pyright
+    ]);
 
     shellAliases = {
       ne = "sudo -E emacs ~/dotfiles/configuration.nix";
@@ -81,5 +93,5 @@
 
   nixpkgs.config.permittedInsecurePackages = [ "electron-25.9.0" ]; # logseq
   nixpkgs.config.allowUnfreePredicate = pkg:
-    builtins.elem (lib.getName pkg) [ "slack" ];
+    builtins.elem (lib.getName pkg) [ "slack" "mongodb-compass" "spotify" ];
 }
