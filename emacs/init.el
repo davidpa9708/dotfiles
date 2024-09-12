@@ -102,7 +102,12 @@
 ;; (use-package tree-sitter-langs
 ;;   :ensure t)
 
-(use-package lsp-mode
+;; (use-package lsp-mode
+;;   :config
+;;   (lsp-mode))
+
+
+(use-package git
   :config
   (lsp-mode))
 

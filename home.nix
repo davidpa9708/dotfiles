@@ -1,5 +1,6 @@
-{ config, pkgs, lib, ... }: {
-
+{ config, pkgs, pkgs-unstable, lib, ... }:
+let pkgs-unstable = import <nixpkgs-unstable> { };
+in {
   home = {
     username = "david";
     homeDirectory = "/home/david";
@@ -16,7 +17,7 @@
       logseq
       starship
       # android-tools
-      nixfmt
+      nixfmt-classic
       syncthing
       slack
       thunderbird
@@ -30,17 +31,28 @@
       protonvpn-cli_2
       mongodb-compass
       spotify
-    ]) ++ (with pkgs.nodePackages_latest; [
-      npm-check-updates
-      prettier
-      typescript
-      typescript-language-server
-      vscode-langservers-extracted
-      yaml-language-server
-      bash-language-server
-      dockerfile-language-server-nodejs
-      pyright
-    ]);
+      inkscape
+      libreoffice-qt
+      tome4
+      feishin
+      # standardnotes
+      librewolf
+      libsForQt5.polonium
+    ]) ++ (with pkgs-unstable;
+      [
+        # standardnotes
+        proton-pass # protonmail-desktop
+      ]) ++ (with pkgs.nodePackages_latest; [
+        npm-check-updates
+        prettier
+        typescript
+        typescript-language-server
+        vscode-langservers-extracted
+        yaml-language-server
+        bash-language-server
+        dockerfile-language-server-nodejs
+        pyright
+      ]);
 
     shellAliases = {
       ne = "sudo -E emacs ~/dotfiles/configuration.nix";
@@ -81,6 +93,17 @@
       enable = true;
       userName = "David Perez Alvarez";
       userEmail = "david@leddgroup.com";
+      extraConfig = { core.sshCommand = "ssh -i ~/.ssh/personal"; };
+      includes = [{
+        condition = "gitdir:~/projects/inpt";
+        contents.user.name = "David"
+        contents.user.email = "dav.perez@combocurve.com"
+        contents.core.sshCommand = "ssh -i ~/.ssh/id_ed25519";
+      }];
+    };
+    ssh = {
+      enable = true;
+      addKeysToAgent = "yes";
     };
     direnv = {
       enable = true;
@@ -91,7 +114,13 @@
     home-manager.enable = true;
   };
 
-  nixpkgs.config.permittedInsecurePackages = [ "electron-25.9.0" ]; # logseq
+  nixpkgs.config.permittedInsecurePackages =
+    [ "electron-25.9.0" "electron-24.8.6" ]; # logseq feishin
   nixpkgs.config.allowUnfreePredicate = pkg:
-    builtins.elem (lib.getName pkg) [ "slack" "mongodb-compass" "spotify" ];
+    builtins.elem (lib.getName pkg) [
+      "slack"
+      "mongodb-compass"
+      "spotify"
+      "keymapp"
+    ];
 }
