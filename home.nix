@@ -38,6 +38,7 @@ in {
       # standardnotes
       librewolf
       libsForQt5.polonium
+      gdtoolkit
     ]) ++ (with pkgs-unstable;
       [
         # standardnotes

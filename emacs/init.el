@@ -2,6 +2,24 @@
 
 ;; (add-to-list 'package-archives rs'("melpa" . "https://melpa.org/packages/"))
 
+(defvar bootstrap-version)
+(let ((bootstrap-file
+       (expand-file-name
+        "straight/repos/straight.el/bootstrap.el"
+        (or (bound-and-true-p straight-base-dir)
+            user-emacs-directory)))
+      (bootstrap-version 7))
+  (unless (file-exists-p bootstrap-file)
+    (with-current-buffer
+        (url-retrieve-synchronously
+         "https://raw.githubusercontent.com/radian-software/straight.el/develop/install.el"
+         'silent 'inhibit-cookies)
+      (goto-char (point-max))
+      (eval-print-last-sexp)))
+  (load bootstrap-file nil 'nomessage))
+
+(straight-use-package 'use-package)
+
 (setopt
  frame-resize-pixelwise t
  ;;  inhibit-startup-screen t
@@ -85,6 +103,9 @@
   (advice-add 'apheleia-format-buffer :around #'shou/fix-apheleia-project-dir)
   )
 
+
+;; (use-package git)
+
 (use-package magit)
 
 (use-package doom-modeline
@@ -99,25 +120,35 @@
   :config
   (envrc-global-mode))
 
-;; (use-package tree-sitter-langs
-;;   :ensure t)
+;; (straight-use-package 'tree-sitter)
+;; (straight-use-package 'tree-sitter-langs)
 
-;; (use-package lsp-mode
-;;   :config
-;;   (lsp-mode))
+(use-package gdscript-mode
+  :straight (gdscript-mode
+             :type git
+             :host github
+             :repo "godotengine/emacs-gdscript-mode"))
 
-
-(use-package git
-  :config
-  (lsp-mode))
 
 (use-package lsp-mode
   :init
   ;; set prefix for lsp-command-keymap (few alternatives - "C-l", "C-c l")
   (setq lsp-keymap-prefix "C-c l")
-  :hook (;; replace XXX-mode with concrete major-mode(e. g. python-mode)
-         (XXX-mode . lsp)
-         ;; if you want which-key integration
+  :hook (
+	 ((;; js modes
+	   ;;emacs-lisp-mode
+	   js-ts-mode tsx-ts-mode typescript-ts-mode
+	   ;; config files modes
+	   json-ts-mode yaml-ts-mode
+	   ;; css modes
+	   scss-mode css-ts-mode
+	   ;; godot
+	   gdscript-ts-mode
+	   ;; others
+	   bash-ts-mode
+	   gfm-mode markdown-mode
+	   dockerfile-ts-mode terraform-mode
+	   lua-mode python-ts-mode nix-mode). lsp-deferred)
          (lsp-mode . lsp-enable-which-key-integration))
   :commands lsp)
 
