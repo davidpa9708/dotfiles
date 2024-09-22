@@ -129,13 +129,15 @@
              :host github
              :repo "godotengine/emacs-gdscript-mode"))
 
+(use-package typescript-mode)
 
 (use-package lsp-mode
   :init
   ;; set prefix for lsp-command-keymap (few alternatives - "C-l", "C-c l")
-  (setq lsp-keymap-prefix "C-c l")
+  (setq lsp-keymap-prefix "C-l")
   :hook (
 	 ((;; js modes
+	   typescript-mode
 	   ;;emacs-lisp-mode
 	   js-ts-mode tsx-ts-mode typescript-ts-mode
 	   ;; config files modes
@@ -151,5 +153,3 @@
 	   lua-mode python-ts-mode nix-mode). lsp-deferred)
          (lsp-mode . lsp-enable-which-key-integration))
   :commands lsp)
-
-(use-package typescript-mode)
