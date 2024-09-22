@@ -1,5 +1,7 @@
 { config, pkgs, pkgs-unstable, lib, ... }:
-let pkgs-unstable = import <nixpkgs-unstable> { };
+let
+  pkgs-unstable = import <nixpkgs-unstable> { };
+  pkgs-23-11 = import <nixos-23.11> { };
 in {
   home = {
     username = "david";
@@ -22,28 +24,31 @@ in {
       slack
       thunderbird
       vscodium
-      godot_4
       ungoogled-chromium
-      gimp
-      blender
-      obs-studio
       vlc
       protonvpn-cli_2
       mongodb-compass
-      spotify
-      inkscape
       libreoffice-qt
-      tome4
-      feishin
+      tome4 # game
+      feishin # spotify client
+      spotify
       # standardnotes
       librewolf
       libsForQt5.polonium
+      # godot stuff:
       gdtoolkit
+      godot_4
+      #media:
+      inkscape
+      blender
+      gimp
+      krita
+      obs-studio
     ]) ++ (with pkgs-unstable;
       [
-        # standardnotes
         proton-pass # protonmail-desktop
-      ]) ++ (with pkgs.nodePackages_latest; [
+      ]) ++ (with pkgs-23-11; [ standardnotes ])
+      ++ (with pkgs.nodePackages_latest; [
         npm-check-updates
         prettier
         typescript
