@@ -17,6 +17,26 @@
   services.displayManager.sddm.enable = true;
   services.desktopManager.plasma6.enable = true;
 
+  services.kanata = {
+    enable = true;
+    keyboards.david.config = ''
+            (defsrc
+        grv  1    2    3    4    5    6    7    8    9    0    -    =    bspc
+        tab  q    w    e    r    t    y    u    i    o    p    [    ]    \
+        caps a    s    d    f    g    h    j    k    l    ;    '    ret
+        lsft z    x    c    v    b    n    m    ,    .    /    rsft
+        lctl lmet lalt           spc            ralt rmet rctl
+            )
+
+      (deflayer colemak-dh
+        grv  1    2    3    4    5    6    7    8    9    0    -    =    bspc
+        tab  q    w    f    p    b    j    l    u    y    ;    [    ]    \
+        caps a    r    s    t    g    m    n    e    i    o    '    ret
+        lsft z    x    c    d    v    k    h    ,    .    /    rsft
+        lctl lmet lalt           spc            ralt rmet rctl
+      )'';
+  };
+
   programs.hyprland.enable = true;
 
   # Enable sound.
@@ -39,6 +59,8 @@
 
   #users.defaultUserShell = pkgs.fish;
   users.users.david.shell = pkgs.fish;
+  users.users.root.extraGroups = [ "uinput" ];
+  users.users.david.extraGroups = [ "uinput" ];
   programs.fish.enable = true;
   #programs.bash.enable = true;
 
