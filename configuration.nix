@@ -68,12 +68,12 @@
 
   # hardware.bumblebee.driver = "nouveau";
 
-  # virtualisation.docker.enable = true; 
-  # virtualisation.docker.rootless = {
-  #  enable = true;
-  #  setSocketVariable = true;
-  #};
-  #services.traefik.group = "docker";
+  virtualisation.docker.enable = true;
+  virtualisation.docker.rootless = {
+    enable = true;
+    setSocketVariable = true;
+  };
+  services.traefik.group = "docker";
   boot.kernelPackages = pkgs.linuxPackages_latest;
   programs.partition-manager.enable = true;
 
