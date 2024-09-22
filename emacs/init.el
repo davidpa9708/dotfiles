@@ -47,6 +47,26 @@
   (let ((old-face-attribute (face-attribute 'default :height)))
     (set-face-attribute 'default nil :height (- old-face-attribute 10))))
 
+
+;; https://stackoverflow.com/a/51445691
+(defun my/get-selected-text ()
+  (interactive "r")
+  (if (use-region-p)
+      (let ((regionp (buffer-substring (region-beginning) (region-end))))
+        (message regionp))))
+
+(defun my/project-search ()
+  "Search in project."
+  (interactive)
+  (consult-grep nil (my/get-selected-text))
+  )
+
+(defun my/file-search ()
+  "Search in file."
+  (interactive)
+  (consult-line (my/get-selected-text))
+  )
+
 (bind-keys
  ("C--" . my/text-scale-decrease)
  ("C-=" . my/text-scale-increase)
@@ -54,11 +74,15 @@
  ("<f6>" . load-theme)
  ("C-<SPC>" . completion-at-point)
  ("C-f" . isearch-forward)
- ("C-S-f" . project-or-external-find-regexp)
+ ("C-S-f" .  project-search)
  ("C-s" . save-buffer)
  ("C-S-z" . undo-redo)
- ("<mouse-3>" . nil)
- ("S-<down-mouse-1>" . mouse-set-mark))
+ ("<mouse-3>" . context-menu-open)
+ ("S-<down-mouse-1>" . mouse-set-mark)
+ ("C-/" . consult-global-mark)
+ ("C-b" . consult-buffer)
+ ("C-p" . project-find-file)
+ ("C-l" . nil))
 
 (require 'use-package-ensure)
 
@@ -77,10 +101,11 @@
 
 (use-package consult
   :config
-  (bind-keys ([remap isearch-forward] . consult-line)
+  (bind-keys ([remap isearch-forward] . my/file-search)
 	     ([remap load-theme] . consult-theme)
 	     ([remap goto-line] . consult-goto-line)
-	     ([remap switch-to-buffer] . consult-buffer)))
+	     ([remap switch-to-buffer] . consult-buffer)
+	     ([remap project-search] .  my/project-search)))
 
 (use-package which-key
   :config (which-key-mode))
@@ -125,9 +150,10 @@
 
 (use-package gdscript-mode
   :straight (gdscript-mode
-             :type git
-             :host github
-             :repo "godotengine/emacs-gdscript-mode"))
+	     :type git
+	     :host github
+	     :repo "godotengine/emacs-gdscript-mode"))
+
 
 (use-package typescript-mode)
 
