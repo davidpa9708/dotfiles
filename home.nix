@@ -96,7 +96,7 @@ in {
       userEmail = "david@leddgroup.com";
       extraConfig = { core.sshCommand = "ssh -i ~/.ssh/personal"; };
       includes = [{
-        condition = "gitdir:~/projects/inpt";
+        condition = "gitdir:~/projects/inpt/";
         contents.user.name = "David";
         contents.user.email = "dav.perez@combocurve.com";
         contents.core.sshCommand = "ssh -i ~/.ssh/id_ed25519";
