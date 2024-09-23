@@ -47,26 +47,6 @@
   (let ((old-face-attribute (face-attribute 'default :height)))
     (set-face-attribute 'default nil :height (- old-face-attribute 10))))
 
-
-;; https://stackoverflow.com/a/51445691
-(defun my/get-selected-text ()
-  (interactive "r")
-  (if (use-region-p)
-      (let ((regionp (buffer-substring (region-beginning) (region-end))))
-        (message regionp))))
-
-(defun my/project-search ()
-  "Search in project."
-  (interactive)
-  (consult-grep nil (my/get-selected-text))
-  )
-
-(defun my/file-search ()
-  "Search in file."
-  (interactive)
-  (consult-line (my/get-selected-text))
-  )
-
 (bind-keys
  ("C--" . my/text-scale-decrease)
  ("C-=" . my/text-scale-increase)
@@ -74,15 +54,17 @@
  ("<f6>" . load-theme)
  ("C-<SPC>" . completion-at-point)
  ("C-f" . isearch-forward)
- ("C-S-f" .  project-search)
+ ("C-S-f" . project-search)
  ("C-s" . save-buffer)
  ("C-S-z" . undo-redo)
  ("<mouse-3>" . context-menu-open)
  ("S-<down-mouse-1>" . mouse-set-mark)
- ("C-/" . consult-global-mark)
- ("C-b" . consult-buffer)
+ ("C-b" . switch-to-buffer)
  ("C-p" . project-find-file)
- ("C-l" . nil))
+ ("C-S-p" . project-switch-project)
+ ("C-o" . find-file)
+ ;; ("C-l" . nil) ; lsp-prefix
+ )
 
 (require 'use-package-ensure)
 
@@ -101,11 +83,34 @@
 
 (use-package consult
   :config
+
+  ;; https://stackoverflow.com/a/51445691
+  (defun my/get-selected-text ()
+    (interactive)
+    (if (use-region-p)
+	(let ((regionp (buffer-substring (region-beginning) (region-end))))
+	  (deactivate-mark)
+          regionp)))
+  
+  (defun my/project-search ()
+    "Search in project."
+    (interactive)
+    (consult-grep nil (my/get-selected-text))
+    )
+  (defun my/file-search ()
+    "Search in file."
+    (interactive)
+    (consult-line (my/get-selected-text))
+    )
   (bind-keys ([remap isearch-forward] . my/file-search)
 	     ([remap load-theme] . consult-theme)
 	     ([remap goto-line] . consult-goto-line)
 	     ([remap switch-to-buffer] . consult-buffer)
-	     ([remap project-search] .  my/project-search)))
+	     ([remap project-search] .  my/project-search)
+	     ([remap project-switch-to-buffer] . consult-project-buffer)
+	     ("C-S-v" . consult-yank-from-kill-ring)
+	     ("C-/" . consult-global-mark)
+	     ))
 
 (use-package which-key
   :config (which-key-mode))
@@ -127,9 +132,6 @@
         (apply orig-fn args))))
   (advice-add 'apheleia-format-buffer :around #'shou/fix-apheleia-project-dir)
   )
-
-
-;; (use-package git)
 
 (use-package magit)
 
