@@ -44,6 +44,8 @@ in {
       gimp
       krita
       obs-studio
+      fd
+      ripgrep
     ]) ++ (with pkgs-unstable;
       [
         proton-pass # protonmail-desktop
