@@ -9,42 +9,64 @@ in {
     stateVersion = "23.11";
 
     packages = (with pkgs; [
-      emacs29
-      #emacs29-nox
+      ## essentials
+      starship
       git
+      syncthing
+
+      ## editors
+      emacs29
       micro
+
+      ## work
+      vscodium
+      slack
+      mongodb-compass
+
+      ## apps
       signal-desktop
       firefox
       keepassxc
       logseq
-      starship
-      # android-tools
-      nixfmt-classic
-      syncthing
-      slack
       thunderbird
-      vscodium
-      ungoogled-chromium
       vlc
-      protonvpn-cli_2
-      mongodb-compass
+      freetube
       libreoffice-qt
-      tome4 # game
-      feishin # spotify client
       spotify
-      # standardnotes
-      libsForQt5.polonium
-      # godot stuff:
+      # feishin # spotify client
+
+      tome4 # game
+
+      ## godot stuff:
       gdtoolkit
       godot_4
-      #media:
+
+      ## creating media:
       inkscape
       blender
       gimp
       krita
       obs-studio
+
+      ## others
+      # libsForQt5.polonium
+      nixfmt-classic
+      protonvpn-cli_2
       fd
       ripgrep
+
+      ## hyprland
+      kitty
+      swaynotificationcenter
+      kdePackages.polkit-kde-agent-1
+      pipewire
+      wireplumber
+      playerctl
+      tofi # wofi
+      # waybar
+      # hyprpaper
+      eww
+
     ]) ++ (with pkgs-unstable;
       [
         proton-pass # protonmail-desktop
@@ -92,6 +114,7 @@ in {
   };
 
   programs = {
+    home-manager.enable = true;
     bash.enable = true;
     fish.enable = true;
     starship.enable = true;
@@ -118,7 +141,6 @@ in {
       #enableBashIntegration = true; # see note on other shells below
       #enableFishIntegration = true;
     };
-    home-manager.enable = true;
     librewolf = {
       enable = true;
       settings = {
@@ -133,7 +155,7 @@ in {
   };
 
   nixpkgs.config.permittedInsecurePackages =
-    [ "electron-25.9.0" "electron-24.8.6" ]; # logseq feishin
+    [ "electron-25.9.0" "electron-24.8.6" "electron-27.3.11" ]; # logseq feishin
   nixpkgs.config.allowUnfreePredicate = pkg:
     builtins.elem (lib.getName pkg) [
       "slack"
@@ -141,4 +163,33 @@ in {
       "spotify"
       "keymapp"
     ];
+
+  # https://wiki.hyprland.org/Nix/Hyprland-on-Home-Manager/
+  home.sessionVariables.NIXOS_OZONE_WL = "1";
+  # https://wiki.hyprland.org/Nix/Hyprland-on-Home-Manager/
+  home.pointerCursor = {
+    gtk.enable = true;
+    # x11.enable = true;
+    package = pkgs.bibata-cursors;
+    name = "Bibata-Modern-Classic";
+    size = 16;
+  };
+  gtk = {
+    enable = true;
+
+    theme = {
+      package = pkgs.flat-remix-gtk;
+      name = "Flat-Remix-GTK-Grey-Darkest";
+    };
+
+    iconTheme = {
+      package = pkgs.gnome.adwaita-icon-theme;
+      name = "Adwaita";
+    };
+
+    font = {
+      name = "Sans";
+      size = 11;
+    };
+  };
 }
