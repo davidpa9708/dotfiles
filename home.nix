@@ -33,7 +33,6 @@ in {
       feishin # spotify client
       spotify
       # standardnotes
-      librewolf
       libsForQt5.polonium
       # godot stuff:
       gdtoolkit
@@ -120,6 +119,17 @@ in {
       #enableFishIntegration = true;
     };
     home-manager.enable = true;
+    librewolf = {
+      enable = true;
+      settings = {
+        "privacy.resistFingerprinting.letterboxing" = true;
+        "webgl.disabled" = false;
+        "privacy.clearOnShutdown.history" = false;
+        "privacy.clearOnShutdown.downloads" = false;
+        "identity.fxaccounts.enabled" = true;
+        "middlemouse.paste" = false;
+      };
+    };
   };
 
   nixpkgs.config.permittedInsecurePackages =
