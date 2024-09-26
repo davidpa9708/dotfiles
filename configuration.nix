@@ -25,13 +25,14 @@
         tab  q    w    e    r    t    y    u    i    o    p    [    ]    \
         caps a    s    d    f    g    h    j    k    l    ;    '    ret
         lsft z    x    c    v    b    n    m    ,    .    /    rsft
-        lctl lmet lalt           spc            ralt rmet rctl
+        lctl lmet lalt           spc            ralt rmet rctl wkup
       )
 
       (defalias
         ;; tap: backtick (grave), hold: toggle layer-switching layer while held
-        nav (tap-hold 200 200 (layer-switch navigation) (layer-while-held navigation))
-
+        nav1 (tap-hold 200 200 (layer-switch navigation) (layer-while-held navigation))
+        nav (layer-while-held navigation)
+        esc (tap-hold 200 200 esc (layer-while-held symbols))
         ;; layer-switch changes the base layer.
         col (layer-switch colemak-dh)
       )
@@ -39,17 +40,25 @@
       (deflayer colemak-dh
         grv  1    2    3    4    5    6    7    8    9    0    -    =    bspc
         tab  q    w    f    p    b    j    l    u    y    ;    [    ]    \
-        @nav a    r    s    t    g    m    n    e    i    o    '    ret
+        @esc  a   r    s    t    g    m    n    e    i    o    '    ret
         lsft z    x    c    d    v    k    h    ,    .    /    rsft
-        lmet lalt lctl           spc            @nav rmet rctl
+        lmet lalt lctl           spc            @nav rmet rctl caps
       )
 
       (deflayer navigation
         grv  1    2    3    4    5    6    7    8    9    0    -    =    bspc
         tab  q    w    f    p    b    pgup home up   end  ;    [    ]    \
-        @col a    r    s    t    g    pgdn left down rght ret  '    ret
-        lsft z    x    c    d    v    k    h    ,    .    /    rsft
-        lmet lalt lctl           spc            @col rmet rctl
+        @esc a    r    s    t    g    pgdn left down rght ret  '    ret
+        lsft z    x    c    bspc v    k    spc  bspc del  /  rsft
+        lmet lalt lctl           spc            @nav rmet rctl caps
+      )
+
+      (deflayer symbols
+        grv  f1   f2   f3   f4   f5   f6   f7   f8   f9   f10  f11  f12  bspc
+        tab  S-1  S-2  S-3  S-4  S-5  S-6  S-7  S-8  S-9  S-0  [    ]    \
+        @esc 1    2    3    4    5    6    7    8    9    0    '    ret
+        lsft z    x    c    d    v    k    h    bspc del  /    rsft
+        lmet lalt lctl           spc            @nav rmet rctl caps
       )
     '';
   };
