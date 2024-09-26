@@ -29,6 +29,7 @@ in {
       keepassxc
       logseq
       thunderbird
+      ungoogled-chromium
       vlc
       freetube
       libreoffice-qt
