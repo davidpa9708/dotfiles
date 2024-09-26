@@ -20,21 +20,38 @@
   services.kanata = {
     enable = true;
     keyboards.david.config = ''
-            (defsrc
+      (defsrc
         grv  1    2    3    4    5    6    7    8    9    0    -    =    bspc
         tab  q    w    e    r    t    y    u    i    o    p    [    ]    \
         caps a    s    d    f    g    h    j    k    l    ;    '    ret
         lsft z    x    c    v    b    n    m    ,    .    /    rsft
         lctl lmet lalt           spc            ralt rmet rctl
-            )
+      )
+
+      (defalias
+        ;; tap: backtick (grave), hold: toggle layer-switching layer while held
+        nav (tap-hold 200 200 (layer-switch navigation) (layer-while-held navigation))
+
+        ;; layer-switch changes the base layer.
+        col (layer-switch colemak-dh)
+      )
 
       (deflayer colemak-dh
         grv  1    2    3    4    5    6    7    8    9    0    -    =    bspc
         tab  q    w    f    p    b    j    l    u    y    ;    [    ]    \
-        caps a    r    s    t    g    m    n    e    i    o    '    ret
+        @nav a    r    s    t    g    m    n    e    i    o    '    ret
         lsft z    x    c    d    v    k    h    ,    .    /    rsft
-        lctl lmet lalt           spc            ralt rmet rctl
-      )'';
+        lmet lalt lctl           spc            @nav rmet rctl
+      )
+
+      (deflayer navigation
+        grv  1    2    3    4    5    6    7    8    9    0    -    =    bspc
+        tab  q    w    f    p    b    pgup home up   end  ;    [    ]    \
+        @col a    r    s    t    g    pgdn left down rght ret  '    ret
+        lsft z    x    c    d    v    k    h    ,    .    /    rsft
+        lmet lalt lctl           spc            @col rmet rctl
+      )
+    '';
   };
 
   programs.hyprland.enable = true;
