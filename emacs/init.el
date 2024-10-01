@@ -54,6 +54,22 @@
   (let ((old-face-attribute (face-attribute 'default :height)))
     (set-face-attribute 'default nil :height (- old-face-attribute 10))))
 
+
+(defun my/next ()
+  "Scroll down and recenter."
+  (interactive)
+  (scroll-up-command)
+  (recenter)
+  )
+
+(defun my/prior ()
+  "Scroll up and recenter."
+  (interactive)
+  (scroll-down-command)
+  (recenter)
+  )
+
+
 (bind-keys
  ("C--" . my/text-scale-decrease)
  ("C-=" . my/text-scale-increase)
@@ -72,6 +88,8 @@
  ("C-o" . find-file)
  ("C-i" . imenu)
  ;; ("C-l" . nil) ; lsp-prefix
+ ("<next>" . my/next)
+ ("<prior>" . my/prior)
  )
 
 ;; https://github.com/minad/vertico vertical completion ui
