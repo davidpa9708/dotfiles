@@ -58,14 +58,14 @@
 (defun my/next ()
   "Scroll down and recenter."
   (interactive)
-  (goto-line (+ (line-number-at-pos) (/ (window-total-height) 2)))
+  (forward-line (/ (window-total-height) 2))
   (recenter)
   )
 
 (defun my/prior ()
   "Scroll up and recenter."
   (interactive)
-  (goto-line (- (line-number-at-pos) (/ (window-total-height) 2)))
+  (forward-line (- (/ (window-total-height) 2)))
   (recenter)
   )
 
