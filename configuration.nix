@@ -33,8 +33,10 @@
         nav1 (tap-hold 200 200 (layer-switch navigation) (layer-while-held navigation))
         nav (layer-while-held navigation)
         esc (tap-hold 200 200 esc (layer-while-held symbols))
+        nsc (tap-hold 200 200 (layer-switch colemak-dh) (layer-while-held symbols))
         ;; layer-switch changes the base layer.
         col (layer-switch colemak-dh)
+        qwt (layer-switch qwerty)
       )
 
       (deflayer colemak-dh
@@ -42,23 +44,31 @@
         tab  q    w    f    p    b    j    l    u    y    ;    [    ]    \
         @esc  a   r    s    t    g    m    n    e    i    o    '    ret
         lsft z    x    c    d    v    k    h    ,    .    /    rsft
-        lmet lalt lctl           spc            @nav rmet rctl caps
+        lctl lmet lalt           spc            @nav rmet rctl @qwt
+      )
+
+      (deflayer qwerty
+        grv  1    2    3    4    5    6    7    8    9    0    -    =    bspc
+        tab  q    w    e    r    t    y    u    i    o    p    [    ]    \
+        @esc a    s    d    f    g    h    j    k    l    ;    '    ret
+        lsft z    x    c    v    b    n    m    ,    .    /    rsft
+        lctl lmet lalt           spc            @nav rmet rctl @col
       )
 
       (deflayer navigation
         grv  1    2    3    4    5    6    7    8    9    0    -    =    bspc
-        tab  q    w    f    p    b    pgup home up   end  ;    [    ]    \
-        @esc a    r    s    t    g    pgdn left down rght ret  '    ret
-        lsft z    x    c    bspc v    k    spc  bspc del  /  rsft
-        lmet lalt lctl           spc            @nav rmet rctl caps
+        tab  q    w    f    p    b    l    home up   end  ;    [    ]    \
+        @esc a    r    s    t    g    pgup left down rght ret  '    ret
+        lsft z    x    c    d    v    pgdn bspc spc  del  /    rsft
+        lctl lmet lalt           spc            @nav rmet rctl @qwt
       )
 
       (deflayer symbols
         grv  f1   f2   f3   f4   f5   f6   f7   f8   f9   f10  f11  f12  bspc
-        tab  S-1  S-2  S-3  S-4  S-5  S-6  S-7  S-8  S-9  S-0  [    ]    \
+        tab  mute vold volu brdn brup b    l    u    y    ;    [    ]    \
         @esc 1    2    3    4    5    6    7    8    9    0    '    ret
-        lsft z    x    c    d    v    k    h    bspc del  /    rsft
-        lmet lalt lctl           spc            @nav rmet rctl caps
+        lsft S-1  S-2  S-3  S-4  S-5  S-6  S-7  S-8  S-9  S-0  rsft
+        lctl lmet lalt           spc            @nav rmet rctl @qwt
       )
     '';
   };
@@ -85,8 +95,8 @@
 
   #users.defaultUserShell = pkgs.fish;
   users.users.david.shell = pkgs.fish;
-  users.users.root.extraGroups = [ "uinput" ];
-  users.users.david.extraGroups = [ "uinput" ];
+  users.users.root.extraGroups = [ "uinput" "docker" ];
+  users.users.david.extraGroups = [ "uinput" "docker" ];
   programs.fish.enable = true;
   #programs.bash.enable = true;
 
