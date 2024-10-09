@@ -26,13 +26,14 @@ in {
       ## apps
       signal-desktop
       firefox
+      libreoffice-qt
+      qutebrowser
       keepassxc
       logseq
       thunderbird
       ungoogled-chromium
       vlc
       freetube
-      libreoffice-qt
       spotify
       # feishin # spotify client
 
@@ -72,7 +73,7 @@ in {
       [
         proton-pass # protonmail-desktop
       ]) ++ (with pkgs-23-11; [ standardnotes ])
-      ++ (with pkgs.nodePackages_latest; [
+      ++ (with pkgs-unstable.nodePackages_latest; [
         npm-check-updates
         prettier
         typescript
@@ -81,7 +82,6 @@ in {
         yaml-language-server
         bash-language-server
         dockerfile-language-server-nodejs
-        pyright
       ]);
 
     shellAliases = {
