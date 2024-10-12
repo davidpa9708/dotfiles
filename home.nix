@@ -99,14 +99,14 @@ in {
     # Home Manager is pretty good at managing dotfiles. The primary way to manage
     # plain files is through 'home.file'.
     file = {
-      eww = {
-        source = builtins.toPath ./eww;
-        target = ".config/eww";
-      };
-      emacs = {
-        source = builtins.toPath ./emacs;
-        target = ".emacs.d";
-      };
+      # eww = {
+      #   source = builtins.toPath ./eww;
+      #   target = ".config/eww";
+      # };
+      # emacs = {
+      #   source = builtins.toPath ./emacs;
+      #   target = ".emacs.d";
+      # };
     };
 
     sessionVariables = { EDITOR = "emacs"; };
@@ -116,6 +116,12 @@ in {
         $DRY_RUN_CMD ln -fs $VERBOSE_ARG ${
           builtins.toPath ./.
         } $HOME/.config/home-manager/
+        $DRY_RUN_CMD ln -fs $VERBOSE_ARG ${
+          builtins.toPath ./emacs
+        } $HOME/.emacs.d
+        $DRY_RUN_CMD ln -fs $VERBOSE_ARG ${
+          builtins.toPath ./eww
+        } $HOME/.config/eww
       '';
     };
 
