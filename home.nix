@@ -69,7 +69,8 @@ in {
       # waybar
       # hyprpaper
       eww
-
+      wmctrl
+      networkmanagerapplet
     ]) ++ (with pkgs-unstable;
       [
         proton-pass # protonmail-desktop
