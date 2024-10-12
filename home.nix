@@ -58,6 +58,7 @@ in {
       ripgrep
 
       ## hyprland
+      libnotify
       kitty
       swaynotificationcenter
       kdePackages.polkit-kde-agent-1
