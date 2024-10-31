@@ -37,38 +37,49 @@
         ;; layer-switch changes the base layer.
         col (layer-switch colemak-dh)
         qwt (layer-switch qwerty)
+
+      	;; modifiers
+        ctl lalt
+        met lmet
+        alt lctl
+
+        ;; shift-hold
+        a (tap-hold 200 200 a lsft)
+        1 (tap-hold 200 200 1 lsft)
+        o (tap-hold 200 200 o rsft)
+        0 (tap-hold 200 200 0 rsft)
       )
 
       (deflayer colemak-dh
         grv  1    2    3    4    5    6    7    8    9    0    -    =    bspc
         tab  q    w    f    p    b    j    l    u    y    ;    [    ]    \
-        @esc  a   r    s    t    g    m    n    e    i    o    '    ret
+        @esc @a   r    s    t    g    m    n    e    i    @o   '    ret
         lsft z    x    c    d    v    k    h    ,    .    /    rsft
-        lctl lmet lalt           spc            @nav rmet rctl @qwt
+        @ctl @met @alt           spc            @nav rmet rctl @qwt
       )
 
       (deflayer qwerty
         grv  1    2    3    4    5    6    7    8    9    0    -    =    bspc
         tab  q    w    e    r    t    y    u    i    o    p    [    ]    \
-        @esc a    s    d    f    g    h    j    k    l    ;    '    ret
+        @esc a    s    d    f    g    h    j    k    l    ;   '    ret
         lsft z    x    c    v    b    n    m    ,    .    /    rsft
-        lctl lmet lalt           spc            @nav rmet rctl @col
+        @ctl @met @alt           spc            @nav rmet rctl @col
       )
 
       (deflayer navigation
         grv  1    2    3    4    5    6    7    8    9    0    -    =    bspc
         tab  q    w    f    p    b    l    home up   end  ;    [    ]    \
-        @esc a    r    s    t    g    pgup left down rght ret  '    ret
+        @esc @a   r    s    t    g    pgup left down rght ret  '    ret
         lsft z    x    c    d    v    pgdn bspc spc  del  /    rsft
-        lctl lmet lalt           spc            @nav rmet rctl @qwt
+        @ctl @met @alt           spc            @nav rmet rctl @qwt
       )
 
       (deflayer symbols
         grv  f1   f2   f3   f4   f5   f6   f7   f8   f9   f10  f11  f12  bspc
         tab  mute vold volu brdn brup b    l    u    y    ;    [    ]    \
-        @esc 1    2    3    4    5    6    7    8    9    0    '    ret
+        @esc @1   2    3    4    5    6    7    8    9    @0   '    ret
         lsft S-1  S-2  S-3  S-4  S-5  S-6  S-7  S-8  S-9  S-0  rsft
-        lctl lmet lalt           spc            @nav rmet rctl @qwt
+        @ctl @met @alt           spc            @nav rmet rctl @qwt
       )
     '';
   };
@@ -115,58 +126,58 @@
 
   hardware.opengl = { enable = true; };
   # Load nvidia driver for Xorg and Wayland
-  services.xserver.videoDrivers = [ "nvidia" ];
+  # services.xserver.videoDrivers = [ "nvidia" ];
 
-  hardware.nvidia = {
+  # hardware.nvidia = {
 
-    # Modesetting is required.
-    modesetting.enable = true;
+  #   # Modesetting is required.
+  #   modesetting.enable = true;
 
-    # Nvidia power management. Experimental, and can cause sleep/suspend to fail.
-    # Enable this if you have graphical corruption issues or application crashes after waking
-    # up from sleep. This fixes it by saving the entire VRAM memory to /tmp/ instead 
-    # of just the bare essentials.
-    powerManagement.enable = false;
+  #   # Nvidia power management. Experimental, and can cause sleep/suspend to fail.
+  #   # Enable this if you have graphical corruption issues or application crashes after waking
+  #   # up from sleep. This fixes it by saving the entire VRAM memory to /tmp/ instead 
+  #   # of just the bare essentials.
+  #   powerManagement.enable = false;
 
-    # Fine-grained power management. Turns off GPU when not in use.
-    # Experimental and only works on modern Nvidia GPUs (Turing or newer).
-    powerManagement.finegrained = false;
+  #   # Fine-grained power management. Turns off GPU when not in use.
+  #   # Experimental and only works on modern Nvidia GPUs (Turing or newer).
+  #   powerManagement.finegrained = false;
 
-    # Use the NVidia open source kernel module (not to be confused with the
-    # independent third-party "nouveau" open source driver).
-    # Support is limited to the Turing and later architectures. Full list of 
-    # supported GPUs is at: 
-    # https://github.com/NVIDIA/open-gpu-kernel-modules#compatible-gpus 
-    # Only available from driver 515.43.04+
-    # Currently alpha-quality/buggy, so false is currently the recommended setting.
-    open = true;
+  #   # Use the NVidia open source kernel module (not to be confused with the
+  #   # independent third-party "nouveau" open source driver).
+  #   # Support is limited to the Turing and later architectures. Full list of 
+  #   # supported GPUs is at: 
+  #   # https://github.com/NVIDIA/open-gpu-kernel-modules#compatible-gpus 
+  #   # Only available from driver 515.43.04+
+  #   # Currently alpha-quality/buggy, so false is currently the recommended setting.
+  #   open = true;
 
-    # Enable the Nvidia settings menu,
-    # accessible via `nvidia-settings`.
-    nvidiaSettings = true;
+  #   # Enable the Nvidia settings menu,
+  #   # accessible via `nvidia-settings`.
+  #   nvidiaSettings = true;
 
-    package = config.boot.kernelPackages.nvidiaPackages.mkDriver {
-      version = "555.58.02";
-      sha256_64bit = "sha256-xctt4TPRlOJ6r5S54h5W6PT6/3Zy2R4ASNFPu8TSHKM=";
-      sha256_aarch64 = "sha256-8hyRiGB+m2hL3c9MDA/Pon+Xl6E788MZ50WrrAGUVuY=";
-      openSha256 = "sha256-8hyRiGB+m2hL3c9MDA/Pon+Xl6E788MZ50WrrAGUVuY=";
-      settingsSha256 = "sha256-ZpuVZybW6CFN/gz9rx+UJvQ715FZnAOYfHn5jt5Z2C8=";
-      persistencedSha256 =
-        "sha256-xctt4TPRlOJ6r5S54h5W6PT6/3Zy2R4ASNFPu8TSHKM=";
-    };
+  #   # package = config.boot.kernelPackages.nvidiaPackages.mkDriver {
+  #   #   version = "560.35.03";
+  #   #   sha256_64bit = "sha256-8pMskvrdQ8WyNBvkU/xPc/CtcYXCa7ekP73oGuKfH+M=";
+  #   #   sha256_aarch64 = "sha256-8hyRiGB+m2hL3c9MDA/Pon+Xl6E788MZ50WrrAGUVuY=";
+  #   #   openSha256 = "sha256-8hyRiGB+m2hL3c9MDA/Pon+Xl6E788MZ50WrrAGUVuY=";
+  #   #   settingsSha256 = "sha256-ZpuVZybW6CFN/gz9rx+UJvQ715FZnAOYfHn5jt5Z2C8=";
+  #   #   persistencedSha256 =
+  #   #     "sha256-8pMskvrdQ8WyNBvkU/xPc/CtcYXCa7ekP73oGuKfH+M=";
+  #   # };
 
-    prime = {
-      # Make sure to use the correct Bus ID values for your system!
-      intelBusId = "PCI:0:2:0";
-      nvidiaBusId = "PCI:1:0:0";
-      # amdgpuBusId = "PCI:54:0:0"; For AMD GPU
-    };
-  };
+  #   prime = {
+  #     # Make sure to use the correct Bus ID values for your system!
+  #     intelBusId = "PCI:0:2:0";
+  #     nvidiaBusId = "PCI:1:0:0";
+  #     # amdgpuBusId = "PCI:54:0:0"; For AMD GPU
+  #   };
+  # };
 
   nixpkgs.config.allowUnfreePredicate = pkg:
     builtins.elem (lib.getName pkg) [
-      "nvidia-x11"
-      "nvidia-settings"
+      # "nvidia-x11"
+      # "nvidia-settings"
       "steam"
       "steam-original"
       "steam-run"
