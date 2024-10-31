@@ -12,7 +12,8 @@ in {
       ## essentials
       starship
       git
-      syncthing
+      # syncthing
+      ranger
 
       ## editors
       emacs29
@@ -71,6 +72,7 @@ in {
       eww
       wmctrl
       networkmanagerapplet
+      flameshot
     ]) ++ (with pkgs-unstable;
       [
         proton-pass # protonmail-desktop
