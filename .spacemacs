@@ -48,6 +48,8 @@ This function should only modify configuration layer settings."
      multiple-cursors
      dash
      ranger
+     prettier
+     nixos
      (typescript :variables
                  typescript-fmt-tool 'prettier
                  typescript-fmt-on-save t)
