@@ -57,6 +57,8 @@ in {
       protonvpn-cli_2
       fd
       ripgrep
+      zeal
+      wakatime
 
       ## hyprland
       libnotify
@@ -122,6 +124,9 @@ in {
         $DRY_RUN_CMD ln -fs $VERBOSE_ARG ${
           builtins.toPath ./emacs
         } $HOME/.emacs.d
+        $DRY_RUN_CMD ln -fs $VERBOSE_ARG ${
+          builtins.toPath ./.spacemacs
+        } $HOME/.spacemacs
         $DRY_RUN_CMD ln -fs $VERBOSE_ARG ${
           builtins.toPath ./eww
         } $HOME/.config/eww

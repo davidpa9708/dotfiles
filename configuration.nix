@@ -17,6 +17,10 @@
   services.displayManager.sddm.enable = true;
   services.desktopManager.plasma6.enable = true;
 
+  fonts.packages = with pkgs; [
+    source-code-pro
+  ];
+
   services.kanata = {
     enable = true;
     keyboards.david.config = ''
