@@ -20,6 +20,8 @@
   ctl lalt
   met lmet
   alt lctl
+  sft lsft
+  tab tab
 
   ;; shift-hold
   a (tap-hold 200 200 a lsft)
@@ -30,32 +32,32 @@
 
 (deflayer colemak-dh
   grv  1    2    3    4    5    6    7    8    9    0    -    =    bspc
-  tab  q    w    f    p    b    j    l    u    y    ;    [    ]    \
+  @tab q    w    f    p    b    j    l    u    y    ;    [    ]    \
   @esc a    r    s    t    g    m    n    e    i    o    '    ret
-  lsft z    x    c    d    v    k    h    ,    .    /    rsft
+  @sft z    x    c    d    v    k    h    ,    .    /    rsft
   @ctl @met @alt           spc            @nav rmet rctl @qwt
 )
 
-(deflayer qwerty
-  grv  1    2    3    4    5    6    7    8    9    0    -    =    bspc
-  tab  q    w    e    r    t    y    u    i    o    p    [    ]    \
-  @esc a    s    d    f    g    h    j    k    l    ;   '    ret
-  lsft z    x    c    v    b    n    m    ,    .    /    rsft
-  @ctl @met @alt           spc            @nav rmet rctl @col
-)
-
 (deflayer navigation
-  grv  1    2    3    4    5    6    7    8    9    0    -    =    bspc
-  tab  q    w    f    p    b    l    home up   end  ;    [    ]    \
+  grv  1    2    3    4    5    6    7    8    9    0    del  bspc bspc
+  @tab q    w    f    p    b    l    home up   end  ;    [    ]    \
   @esc a    r    s    t    g    pgup left down rght ret  '    ret
-  lsft z    x    c    d    v    pgdn bspc spc  del  /    rsft
+  @sft z    x    c    d    v    pgdn bspc spc  del  /    rsft
   @ctl @met @alt           spc            @nav rmet rctl @qwt
 )
 
 (deflayer symbols
   grv  f1   f2   f3   f4   f5   f6   f7   f8   f9   f10  f11  f12  bspc
-  tab  mute vold volu brdn brup b    l    u    y    ;    [    ]    \
-  @esc 1    2    3    4    5    6    7    8    9    @0   '    ret
-  lsft S-1  S-2  S-3  S-4  S-5  S-6  S-7  S-8  S-9  S-0  rsft
+  @tab mute vold volu brdn brup b    l    u    y    ;    {    }    \
+  @esc 1    2    3    4    5    6    7    8    9    0   '    ret
+  @sft S-1  S-2  S-3  S-4  S-5  S-6  S-7  S-8  S-9  S-0  rsft
   @ctl @met @alt           spc            @nav rmet rctl @qwt
+)
+
+(deflayer qwerty
+  grv  1    2    3    4    5    6    7    8    9    0    -    =    bspc
+  @tab q    w    e    r    t    y    u    i    o    p    [    ]    \
+  @esc a    s    d    f    g    h    j    k    l    ;    '    ret
+  @sft z    x    c    v    b    n    m    ,    .    /    rsft
+  @ctl @met @alt           spc            @nav rmet rctl @col
 )
