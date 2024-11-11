@@ -76,7 +76,7 @@ This function should only modify configuration layer settings."
    ;; `dotspacemacs/user-config'. To use a local version of a package, use the
    ;; `:location' property: '(your-package :location "~/path/to/your-package/")
    ;; Also include the dependencies as they will not be resolved automatically.
-   dotspacemacs-additional-packages '(envrc)
+   dotspacemacs-additional-packages '(envrc gdscript-mode)
 
    ;; A list of packages that cannot be updated.
    dotspacemacs-frozen-packages '()
@@ -594,6 +594,8 @@ configuration.
 Put your configuration code here, except for variables that should be set
 before packages are loaded."
   (envrc-global-mode)
+  (gdscript-mode)
+  (global-wakatime-mode)
 
   (defun my/next ()
     "Scroll down and recenter."
@@ -654,8 +656,6 @@ before packages are loaded."
    ("<prior>" . my/prior)
    ;; ("TAB" . self-insert-command)
    )
-
-  (global-wakatime-mode)
   )
 
 
@@ -671,8 +671,10 @@ This function is called at the very end of Spacemacs initialization."
    ;; If you edit it by hand, you could mess it up, so be careful.
    ;; Your init file should contain only one such instance.
    ;; If there is more than one, they won't work right.
+   '(gdscript-gdformat-save-and-format t)
+   '(gdscript-godot-executable "godot4")
    '(package-selected-packages
-     '(direnv company-nixos-options helm-nixos-options json-mode json-navigator json-reformat json-snatcher nix-mode nixos-options web-beautify js-doc js2-refactor multiple-cursors livid-mode nodejs-repl npm-mode prettier-js skewer-mode js2-mode simple-httpd typescript-mode ranger helm-dash dash-docs zeal-at-point code-review emojify deferred a forge yaml ghub closql emacsql treepy git-link git-messenger git-modes git-timemachine gitignore-templates helm-git-grep helm-ls-git smeargle treemacs-magit magit with-editor transient magit-section evil-easymotion treemacs-evil auto-yasnippet flycheck-pos-tip pos-tip helm-c-yasnippet helm-company company helm-lsp lsp-origami origami lsp-treemacs lsp-ui lsp-mode markdown-mode yasnippet-snippets yasnippet mwim unfill ws-butler writeroom-mode winum which-key vundo volatile-highlights vim-powerline vi-tilde-fringe uuidgen undo-fu-session undo-fu treemacs-projectile treemacs-persp treemacs-icons-dired toc-org term-cursor symon symbol-overlay string-inflection string-edit-at-point spacemacs-whitespace-cleanup spacemacs-purpose-popwin spaceline space-doc restart-emacs request rainbow-delimiters quickrun popwin pcre2el password-generator paradox overseer org-superstar open-junk-file nameless multi-line macrostep lorem-ipsum link-hint inspector info+ indent-guide hybrid-mode hungry-delete holy-mode hl-todo highlight-parentheses highlight-numbers highlight-indentation hide-comnt helm-xref helm-themes helm-swoop helm-purpose helm-projectile helm-org helm-mode-manager helm-make helm-descbinds helm-comint helm-ag google-translate golden-ratio flycheck-package flycheck-elsa flx-ido fancy-battery eyebrowse expand-region evil-visualstar evil-visual-mark-mode evil-unimpaired evil-tutor evil-textobj-line evil-surround evil-numbers evil-nerd-commenter evil-mc evil-matchit evil-lisp-state evil-lion evil-indent-plus evil-iedit-state evil-goggles evil-exchange evil-evilified-state evil-escape evil-collection evil-cleverparens evil-args evil-anzu eval-sexp-fu emr elisp-slime-nav elisp-demos elisp-def editorconfig dumb-jump drag-stuff dotenv-mode disable-mouse dired-quick-sort diminish devdocs define-word column-enforce-mode clean-aindent-mode centered-cursor-mode auto-highlight-symbol auto-compile all-the-icons aggressive-indent ace-link ace-jump-helm-line)))
+     '(yaml-mode direnv company-nixos-options helm-nixos-options json-mode json-navigator json-reformat json-snatcher nix-mode nixos-options web-beautify js-doc js2-refactor multiple-cursors livid-mode nodejs-repl npm-mode prettier-js skewer-mode js2-mode simple-httpd typescript-mode ranger helm-dash dash-docs zeal-at-point code-review emojify deferred a forge yaml ghub closql emacsql treepy git-link git-messenger git-modes git-timemachine gitignore-templates helm-git-grep helm-ls-git smeargle treemacs-magit magit with-editor transient magit-section evil-easymotion treemacs-evil auto-yasnippet flycheck-pos-tip pos-tip helm-c-yasnippet helm-company company helm-lsp lsp-origami origami lsp-treemacs lsp-ui lsp-mode markdown-mode yasnippet-snippets yasnippet mwim unfill ws-butler writeroom-mode winum which-key vundo volatile-highlights vim-powerline vi-tilde-fringe uuidgen undo-fu-session undo-fu treemacs-projectile treemacs-persp treemacs-icons-dired toc-org term-cursor symon symbol-overlay string-inflection string-edit-at-point spacemacs-whitespace-cleanup spacemacs-purpose-popwin spaceline space-doc restart-emacs request rainbow-delimiters quickrun popwin pcre2el password-generator paradox overseer org-superstar open-junk-file nameless multi-line macrostep lorem-ipsum link-hint inspector info+ indent-guide hybrid-mode hungry-delete holy-mode hl-todo highlight-parentheses highlight-numbers highlight-indentation hide-comnt helm-xref helm-themes helm-swoop helm-purpose helm-projectile helm-org helm-mode-manager helm-make helm-descbinds helm-comint helm-ag google-translate golden-ratio flycheck-package flycheck-elsa flx-ido fancy-battery eyebrowse expand-region evil-visualstar evil-visual-mark-mode evil-unimpaired evil-tutor evil-textobj-line evil-surround evil-numbers evil-nerd-commenter evil-mc evil-matchit evil-lisp-state evil-lion evil-indent-plus evil-iedit-state evil-goggles evil-exchange evil-evilified-state evil-escape evil-collection evil-cleverparens evil-args evil-anzu eval-sexp-fu emr elisp-slime-nav elisp-demos elisp-def editorconfig dumb-jump drag-stuff dotenv-mode disable-mouse dired-quick-sort diminish devdocs define-word column-enforce-mode clean-aindent-mode centered-cursor-mode auto-highlight-symbol auto-compile all-the-icons aggressive-indent ace-link ace-jump-helm-line)))
   (custom-set-faces
    ;; custom-set-faces was added by Custom.
    ;; If you edit it by hand, you could mess it up, so be careful.
