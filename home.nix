@@ -1,4 +1,4 @@
-{ config, pkgs, pkgs-unstable, lib, ... }:
+{ config, pkgs, pkgs-unstable, lib, buildPythonPackage, ... }:
 let
   pkgs-unstable = import <nixpkgs-unstable> { };
   pkgs-23-11 = import <nixos-23.11> { };
@@ -40,10 +40,6 @@ in {
 
       tome4 # game
 
-      ## godot stuff:
-      gdtoolkit
-      godot_4
-
       ## creating media:
       inkscape
       blender
@@ -79,16 +75,25 @@ in {
       [
         proton-pass # protonmail-desktop
       ]) ++ (with pkgs-23-11; [ standardnotes ])
-      ++ (with pkgs-unstable.nodePackages_latest; [
-        npm-check-updates
-        prettier
-        typescript
-        typescript-language-server
-        vscode-langservers-extracted
-        yaml-language-server
-        bash-language-server
-        dockerfile-language-server-nodejs
-      ]);
+      ++ (with pkgs-unstable.nodePackages_latest;
+        [
+          npm-check-updates
+          prettier
+          typescript
+          typescript-language-server
+          vscode-langservers-extracted
+          yaml-language-server
+          bash-language-server
+          dockerfile-language-server-nodejs
+        ]
+
+        ++ (with pkgs-unstable; [
+          ## godot stuff:
+          gdtoolkit_4
+          godot_4
+        ])
+
+      );
 
     shellAliases = {
       ne = "sudo -E emacs ~/dotfiles/configuration.nix";
