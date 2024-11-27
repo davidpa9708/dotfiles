@@ -1,5 +1,7 @@
 { config, lib, pkgs, ... }: {
 
+  imports = [ ./nixos/nvidia.nix ./nixos/kanata.nix ];
+
   boot.loader.systemd-boot.enable = true;
   boot.loader.efi.canTouchEfiVariables = true;
 
@@ -10,6 +12,9 @@
 
   programs.nix-ld.enable = true;
 
+  # Sets up all the libraries to load
+  # programs.nix-ld.libraries = with pkgs; [ stdenv.cc.cc openssl ];
+
   services.ntp.enable = true;
 
   services.xserver.enable = true;
@@ -18,11 +23,6 @@
   services.desktopManager.plasma6.enable = true;
 
   fonts.packages = with pkgs; [ source-code-pro ];
-
-  services.kanata = {
-    enable = true;
-    keyboards.david.configFile = ./kanata.kbd;
-  };
 
   programs.hyprland.enable = true;
 
@@ -63,56 +63,6 @@
   services.traefik.group = "docker";
   boot.kernelPackages = pkgs.linuxPackages_latest;
   programs.partition-manager.enable = true;
-
-  # Load nvidia driver for Xorg and Wayland
-  services.xserver.videoDrivers = [ "nvidia" ];
-  hardware.opengl = { enable = true; };
-
-  hardware.nvidia = {
-
-    # Modesetting is required.
-    modesetting.enable = true;
-
-    # Nvidia power management. Experimental, and can cause sleep/suspend to fail.
-    # Enable this if you have graphical corruption issues or application crashes after waking
-    # up from sleep. This fixes it by saving the entire VRAM memory to /tmp/ instead 
-    # of just the bare essentials.
-    powerManagement.enable = false;
-
-    # Fine-grained power management. Turns off GPU when not in use.
-    # Experimental and only works on modern Nvidia GPUs (Turing or newer).
-    powerManagement.finegrained = false;
-
-    # Use the NVidia open source kernel module (not to be confused with the
-    # independent third-party "nouveau" open source driver).
-    # Support is limited to the Turing and later architectures. Full list of 
-    # supported GPUs is at: 
-    # https://github.com/NVIDIA/open-gpu-kernel-modules#compatible-gpus 
-    # Only available from driver 515.43.04+
-    # Currently alpha-quality/buggy, so false is currently the recommended setting.
-    open = false;
-
-    # Enable the Nvidia settings menu,
-    # accessible via `nvidia-settings`.
-    nvidiaSettings = true;
-
-    package = config.boot.kernelPackages.nvidiaPackages.mkDriver {
-      version = "560.35.03";
-      sha256_64bit = "sha256-8pMskvrdQ8WyNBvkU/xPc/CtcYXCa7ekP73oGuKfH+M=";
-      sha256_aarch64 = "sha256-8hyRiGB+m2hL3c9MDA/Pon+Xl6E788MZ50WrrAGUVuY=";
-      openSha256 = "sha256-8hyRiGB+m2hL3c9MDA/Pon+Xl6E788MZ50WrrAGUVuY=";
-      settingsSha256 = "sha256-ZpuVZybW6CFN/gz9rx+UJvQ715FZnAOYfHn5jt5Z2C8=";
-      persistencedSha256 =
-        "sha256-8pMskvrdQ8WyNBvkU/xPc/CtcYXCa7ekP73oGuKfH+M=";
-    };
-
-    prime = {
-      # Make sure to use the correct Bus ID values for your system!
-      intelBusId = "PCI:0:2:0";
-      nvidiaBusId = "PCI:1:0:0";
-      # amdgpuBusId = "PCI:54:0:0"; For AMD GPU
-    };
-  };
 
   nixpkgs.config.allowUnfreePredicate = pkg:
     builtins.elem (lib.getName pkg) [

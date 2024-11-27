@@ -48,8 +48,8 @@
 
 (deflayer symbols
   grv  f1   f2   f3   f4   f5   f6   f7   f8   f9   f10  f11  f12  bspc
-  @tab mute vold volu brdn brup b    l    u    y    ;    {    }    \
-  @esc 1    2    3    4    5    6    7    8    9    0   '    ret
+  @tab mute vold volu brdn brup b    l    u    y    ;    lbrc rbrc \
+  @esc 1    2    3    4    5    6    7    8    9    0    '    ret
   @sft S-1  S-2  S-3  S-4  S-5  S-6  S-7  S-8  S-9  S-0  rsft
   @ctl @met @alt           spc            @nav rmet rctl @qwt
 )
