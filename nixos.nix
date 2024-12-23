@@ -1,6 +1,10 @@
 { config, lib, pkgs, ... }: {
 
-  imports = [ ./nixos/nvidia.nix ./nixos/kanata.nix ];
+  imports = [
+    <nixos-hardware/lenovo/thinkpad/p14s>
+    ./nixos/nvidia.nix
+    ./nixos/kanata.nix
+  ];
 
   boot.loader.systemd-boot.enable = true;
   boot.loader.efi.canTouchEfiVariables = true;
@@ -8,7 +12,7 @@
   networking.networkmanager.enable = true;
   networking.networkmanager.wifi.backend = "iwd";
 
-  # time.timeZone = "Europe/Amsterdam";
+  time.timeZone = "America/Phoenix";
 
   programs.nix-ld.enable = true;
 
@@ -16,6 +20,7 @@
   # programs.nix-ld.libraries = with pkgs; [ stdenv.cc.cc openssl ];
 
   services.ntp.enable = true;
+  services.automatic-timezoned.enable = true;
 
   services.xserver.enable = true;
   # services.desktopManager.plasma5.enable = true;
@@ -61,7 +66,8 @@
     setSocketVariable = true;
   };
   services.traefik.group = "docker";
-  boot.kernelPackages = pkgs.linuxPackages_latest;
+  boot.kernelPackages = pkgs.linuxPackages;
+  # pkgs.linuxPackages_latest;
   programs.partition-manager.enable = true;
 
   nixpkgs.config.allowUnfreePredicate = pkg:
