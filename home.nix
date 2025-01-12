@@ -127,7 +127,7 @@ in {
           builtins.toPath ./.
         } $HOME/.config/home-manager/
         $DRY_RUN_CMD ln -fs $VERBOSE_ARG ${
-          builtins.toPath ./emacs
+          builtins.toPath ./emacs.d
         } $HOME/.emacs.d
         $DRY_RUN_CMD ln -fs $VERBOSE_ARG ${
           builtins.toPath ./.spacemacs

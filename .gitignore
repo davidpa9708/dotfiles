@@ -1,2 +1,5 @@
-emacs/*
-!emacs/init.el
+emacs.d/*
+emacs.d.spacemacs/*
+!emacs.d/init.el
+!emacs.d.spacemacs/init.el
+

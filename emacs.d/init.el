@@ -9,11 +9,16 @@
  use-short-answers t
  auto-save-default nil
  tab-width 4
+ read-process-output-max (* 1024 1024)
  )
 
 (cua-mode) ;; C-x to cut on selection https://www.emacswiki.org/emacs/CuaMode
-;; (global-display-line-numbers-mode) ;; display line numbers
+(global-display-line-numbers-mode) ;; display line numbers
 (electric-pair-mode)
+(scroll-bar-mode -1)
+(tool-bar-mode -1)
+(set-face-attribute 'default t :height 196)
+(menu-bar-mode -1)
 ;; (recentf-mode)
 
 ;; straight https://github.com/radian-software/straight.el
@@ -50,7 +55,7 @@
 (defun my/text-scale-decrease ()
   "Decrease font size."
   (interactive)
-    (let ((old-face-attribute (face-attribute 'default :height)))
+  (let ((old-face-attribute (face-attribute 'default :height)))
     (set-face-attribute 'default nil :height (- old-face-attribute 10))))
 
 
