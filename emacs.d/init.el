@@ -10,6 +10,7 @@
  auto-save-default nil
  tab-width 4
  read-process-output-max (* 1024 1024)
+ warning-minimum-level :emergency
  )
 
 (set-face-attribute 'default t :height 180)
