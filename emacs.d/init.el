@@ -12,12 +12,16 @@
  read-process-output-max (* 1024 1024)
  )
 
+(set-face-attribute 'default t :height 180)
+
+
 (cua-mode) ;; C-x to cut on selection https://www.emacswiki.org/emacs/CuaMode
 (global-display-line-numbers-mode) ;; display line numbers
 (electric-pair-mode)
 (scroll-bar-mode -1)
 (tool-bar-mode -1)
-(set-face-attribute 'default t :height 196)
+
+
 (menu-bar-mode -1)
 ;; (recentf-mode)
 
@@ -75,17 +79,39 @@
 
 
 (defun my/copy-path-file ()
-  "Scroll up and recenter."
+  "Copy path file name."
   (interactive)
   (kill-new buffer-file-name)
   )
+
+(use-package avy
+  :config
+  (bind-keys ("C-/" .  avy-goto-char))
+  )
+
+
+(defun my/avy ()
+  "Start selection and avy"
+  (interactive)
+  (if (not (region-active-p))
+	  (call-interactively 'push-mark-command))
+  (call-interactively 'avy-goto-char)
+  )
+
+(defun my/goto-match-paren (arg) ;; https://www.emacswiki.org/emacs/NavigatingParentheses#h5o-3
+  "Go to the matching parenthesis if on parenthesis, otherwise insert %.
+vi style of % jumping to matching brace."
+  (interactive "p")
+  (cond ((looking-at "\\s\(") (forward-list 1) (backward-char 1))
+        ((looking-at "\\s\)") (forward-char 1) (backward-list 1))
+        (t (self-insert-command (or arg 1)))))
 
 (bind-keys
  ("C--" . my/text-scale-decrease)
  ("C-=" . my/text-scale-increase)
  ("<f1>" . execute-extended-command)
  ("<f6>" . load-theme)
- ("C-<SPC>" . completion-at-point)
+ ("C-." . completion-at-point)
  ("C-f" . isearch-forward)
  ("C-S-f" . project-search)
  ("C-s" . save-buffer)
@@ -102,7 +128,11 @@
  ("<next>" . my/next)
  ("<prior>" . my/prior)
  ("TAB" . self-insert-command)
+ ("C-?" . my/avy)
+ ("M-/" . goto-line)
+ ("C-%" . my/goto-match-paren)
  )
+
 
 ;; https://github.com/minad/vertico vertical completion ui
 (use-package vertico
@@ -150,7 +180,7 @@
 			 ([remap project-switch-to-buffer] . consult-project-buffer)
 			 ([remap project-find-file] . consult-fd)
 			 ("C-S-v" . consult-yank-from-kill-ring)
-			 ("C-/" . consult-global-mark)
+			 ;; b			 ("C-/" . consult-global-mark)
 			 ("C-e" . consult-flymake)
 			 ([remap imenu] . consult-imenu)
 			 ([remap Info-search] . consult-info)
@@ -174,7 +204,7 @@
   ;; makes it run the command under project root.
   (defun shou/fix-apheleia-project-dir (orig-fn &rest args)
     (let ((project (project-current)))
-      (if (not (null project))
+	  (if (not (null project))
 		  (let ((default-directory (project-root project))) (apply orig-fn args))
 		(apply orig-fn args))))
   (advice-add 'apheleia-format-buffer :around #'shou/fix-apheleia-project-dir)
@@ -253,9 +283,10 @@
 		   lua-mode python-ts-mode nix-mode) . lsp-deferred)
 		 (lsp-mode . lsp-enable-which-key-integration))
   :commands lsp
-  :bind
-  (("C-." .    lsp-execute-code-action)
-   ))
+  ;; :bind
+  ;; (("C-." .    lsp-execute-code-action)
+  ;;  )
+  )
 
 (use-package lsp-ui :commands lsp-ui-mode)
 
