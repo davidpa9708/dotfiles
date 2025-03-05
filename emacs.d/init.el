@@ -78,6 +78,26 @@
   (recenter)
   )
 
+(defun my/next-copy ()
+  "Scroll down and recenter."
+  (interactive)
+  (if (not (region-active-p))
+      (call-interactively 'push-mark-command))
+  (forward-line (/ (window-total-height) 2))
+  (recenter)
+  )
+
+(defun my/prior-copy ()
+  "Scroll up and recenter."
+  (interactive)
+  (if (not (region-active-p))
+      (call-interactively 'push-mark-command))
+  (forward-line (- (/ (window-total-height) 2)))
+  (recenter)
+  )
+
+
+
 
 (defun my/copy-path-file ()
   "Copy path file name."
@@ -85,27 +105,47 @@
   (kill-new buffer-file-name)
   )
 
-(use-package avy
-  :config
-  (bind-keys ("C-/" .  avy-goto-char))
-  )
-
-
-(defun my/avy ()
-  "Start selection and avy"
-  (interactive)
-  (if (not (region-active-p))
-	  (call-interactively 'push-mark-command))
-  (call-interactively 'avy-goto-char)
-  )
-
-(defun my/goto-match-paren (arg) ;; https://www.emacswiki.org/emacs/NavigatingParentheses#h5o-3
-  "Go to the matching parenthesis if on parenthesis, otherwise insert %.
-vi style of % jumping to matching brace."
+;; https://www.emacswiki.org/emacs/NavigatingParentheses#h5o-3
+(defun my/goto-match-paren (arg)
+  "Go to the matching parenthesis if on parenthesis. Else go to the
+   opening parenthesis one level up."
   (interactive "p")
-  (cond ((looking-at "\\s\(") (forward-list 1) (backward-char 1))
-        ((looking-at "\\s\)") (forward-char 1) (backward-list 1))
-        (t (self-insert-command (or arg 1)))))
+  (cond ((looking-at "\\s\(") (forward-list 1))
+        (t
+         (backward-char 1)
+         (cond ((looking-at "\\s\)")
+                (forward-char 1) (backward-list 1))
+               (t
+                (while (not (looking-at "\\s("))
+                  (backward-char 1)
+                  (cond ((looking-at "\\s\)")
+                         (message "->> )")
+                         (forward-char 1)
+                         (backward-list 1)
+                         (backward-char 1)))
+                  ))))))
+
+;; https://stackoverflow.com/a/51445691
+(defun my/get-selected-text ()
+  (interactive)
+  (if (use-region-p)
+	  (let ((regionp (buffer-substring (region-beginning) (region-end))))
+		(deactivate-mark)
+		regionp)))
+
+(defun my/goto-line (arg)
+  "go to other window and go to line"
+  (interactive "p")
+  (call-interactively 'other-window)
+  (forward-line (-  (my/get-selected-text) (string-to-number (format-mode-line "%l"))))
+  )
+
+(defun my/view-buffer-other-frame (arg)
+  "go to other window and go to line"
+  (interactive "p")
+  (view-buffer-other-frame (current-buffer))
+  )
+
 
 (bind-keys
  ("C--" . my/text-scale-decrease)
@@ -122,17 +162,47 @@ vi style of % jumping to matching brace."
  ("C-b" . switch-to-buffer)
  ("C-p" . project-find-file)
  ("C-S-p" . project-switch-project)
- ("C-o" . find-file)
+ ;; ("C-o" . find-file)
  ("C-i" . imenu)
  ;; ("C-l" . nil) ; lsp-prefix
- ("<escape>" . keyboard-escape-quit)
+ ("<escape>" . keyboard-escape-quit) 
  ("<next>" . my/next)
  ("<prior>" . my/prior)
+ ;;("S-<next>" . my/next-copy)
+ ;;("S-<prior>" . my/prior-copy)
+ ("<home>" . back-to-indentation) ;; https://stackoverflow.com/a/12346740
+ ;; ("<end>" . move-end-of-line)
  ("TAB" . self-insert-command)
- ("C-?" . my/avy)
- ("M-/" . goto-line)
- ("C-%" . my/goto-match-paren)
+ ("M-?" . goto-line)
+ ("C-<escape>" . keyboard-quit)
+ ("C-o" . other-window)
+ ("C-:" . my/view-buffer-other-frame)
+ ("C-1" . delete-other-windows)
+ ("C-2" . split-window-below)
+ ("C-3" . split-window-right)
+ ("C-0" . delete-window)
+ ("C-;" . query-replace-regexp)
+ ("C-S-SPC" . exchange-point-and-mark)
+ ("C-'" . my/goto-match-paren)
+ ("C-\"" . my/goto-match-paren)
+ ;; ("C-SPC" . execute-extended-command)
  )
+
+(use-package avy
+  :config
+  (bind-keys
+   ("M-/" .  avy-goto-char)
+   )
+  (bind-keys ) 
+  )
+
+
+(use-package jump-char
+  :config
+  (bind-keys
+   ("C-/" .  jump-char-forward)
+   ("C-?" .  jump-char-backward)
+   ))
 
 
 ;; https://github.com/minad/vertico vertical completion ui
@@ -153,15 +223,7 @@ vi style of % jumping to matching brace."
   (completion-category-overrides '((file (styles basic partial-completion)))))
 
 (use-package consult
-  :config
-
-  ;; https://stackoverflow.com/a/51445691
-  (defun my/get-selected-text ()
-    (interactive)
-    (if (use-region-p)
-		(let ((regionp (buffer-substring (region-beginning) (region-end))))
-		  (deactivate-mark)
-		  regionp)))
+  :config  
   
   (defun my/project-search ()
     "Search in project."
@@ -194,7 +256,7 @@ vi style of % jumping to matching brace."
 
 (use-package ef-themes
   :config
-  (load-theme 'ef-owl t))
+  (load-theme 'wombat t))
 
 ;; commenting due to some formatting issues
 (use-package apheleia
@@ -211,7 +273,11 @@ vi style of % jumping to matching brace."
   (advice-add 'apheleia-format-buffer :around #'shou/fix-apheleia-project-dir)
   )
 
-(use-package magit)
+(use-package magit
+  :bind
+  ("M-g" .  magit-file-dispatch)
+  ("M-G" .  magit-status)
+  )
 
 (use-package diff-hl
   :config
@@ -305,7 +371,7 @@ vi style of % jumping to matching brace."
 (use-package embark
   :bind
   (("C-," . embark-act)         ;; pick some comfortable binding
-   ("C-;" . embark-dwim)        ;; good alternative: M-.
+   ;;   ("C-;" . embark-dwim)        ;; good alternative: M-.
    ("C-h B" . embark-bindings)) ;; alternative for `describe-bindings'
 
   :init
@@ -333,3 +399,4 @@ vi style of % jumping to matching brace."
 
 ;; (use-package app-launcher
 ;;   :straight '(app-launcher :host github :repo "SebastienWae/app-launcher"))
+
