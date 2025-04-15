@@ -7,17 +7,14 @@
 )
 
 (defalias
-  ;; tap: backtick (grave), hold: toggle layer-switching layer while held
-  nav1 (tap-hold-press 100 100 (layer-switch navigation) (layer-while-held navigation))
-  mod (layer-while-held navigation)
-  ;; (tap-hold 200 200 spc (layer-while-held navigation))
-  spc spc
-  esc (tap-hold-press 100 100 esc (layer-while-held symbols))
-  num (layer-while-held symbols)
-  nsc (tap-hold-press 100 100 (layer-switch colemak-dh) (layer-while-held symbols))
   ;; layer-switch changes the base layer.
   col (layer-switch colemak-dh)
   qwt (layer-switch qwerty)
+  ;; tap: backtick (grave), hold: toggle layer-switching layer while held
+  mod lsft
+  spc spc
+  esc (tap-hold-press 100 100 esc (layer-while-held navigation))
+  num (layer-while-held symbols)
 
   ;; modifiers
   sft lsft
@@ -37,8 +34,8 @@
 )
 
 (deflayer navigation
-  grv  1    2    3    4    5    6    7    8    9    0    del  bspc bspc
-  @tab q    w    f    p    b    j    home up   end  ;    [    ]    \
+  grv  f1   f2   f3   f4   f5   f6   f7   f8   f9   f10  f11  f12  bspc
+  @tab mute vold volu brdn brup j    home up   end  ;    [    ]    \
   @esc a    r    s    t    g    pgup left down rght ret  '    ret
   @sft z    x    c    d    v    pgdn bspc XX   del  /    rsft
   @ctl @met @alt           @spc           @mod @num rctl @qwt
