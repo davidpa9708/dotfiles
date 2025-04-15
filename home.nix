@@ -155,7 +155,7 @@ in {
         condition = "gitdir:~/projects/inpt/";
         contents.user.name = "David";
         contents.user.email = "dav.perez@combocurve.com";
-        contents.core.sshCommand = "ssh -i ~/.ssh/id_ed25519";
+        contents.core.sshCommand = "ssh -i ~/.ssh/work";
       }];
     };
     ssh = {
