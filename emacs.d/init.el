@@ -13,7 +13,6 @@
  warning-minimum-level :emergency
  )
 
-(set-face-attribute 'default t :height 180)
 
 
 (cua-mode) ;; C-x to cut on selection https://www.emacswiki.org/emacs/CuaMode
@@ -256,7 +255,7 @@
 
 (use-package ef-themes
   :config
-  (load-theme 'wombat t))
+  (load-theme 'ef-owl t))
 
 ;; commenting due to some formatting issues
 (use-package apheleia
@@ -400,3 +399,7 @@
 ;; (use-package app-launcher
 ;;   :straight '(app-launcher :host github :repo "SebastienWae/app-launcher"))
 
+
+;; https://github.com/domtronn/all-the-icons.el
+(use-package all-the-icons
+  :if (display-graphic-p))
