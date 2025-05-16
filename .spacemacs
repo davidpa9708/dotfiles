@@ -75,7 +75,7 @@ This function should only modify configuration layer settings."
    ;; `dotspacemacs/user-config'. To use a local version of a package, use the
    ;; `:location' property: '(your-package :location "~/path/to/your-package/")
    ;; Also include the dependencies as they will not be resolved automatically.
-   dotspacemacs-additional-packages '(envrc gdscript-mode)
+   dotspacemacs-additional-packages '(envrc gdscript-mode rebinder)
 
    ;; A list of packages that cannot be updated.
    dotspacemacs-frozen-packages '()
@@ -168,7 +168,7 @@ It should only modify the values of Spacemacs settings."
    ;; with `:variables' keyword (similar to layers). Check the editing styles
    ;; section of the documentation for details on available variables.
    ;; (default 'vim)
-   dotspacemacs-editing-style 'vim
+   dotspacemacs-editing-style 'emacs
 
    ;; If non-nil show the version string in the Spacemacs buffer. It will
    ;; appear as (spacemacs version)@(emacs version)
@@ -575,6 +575,21 @@ This function is called immediately after `dotspacemacs/init', before layer
 configuration.
 It is mostly for variables that should be set before packages are loaded.
 If you are unsure, try setting them in `dotspacemacs/user-config' first."
+  (defvar bootstrap-version)
+  (let ((bootstrap-file
+         (expand-file-name
+          "straight/repos/straight.el/bootstrap.el"
+          (or (bound-and-true-p straight-base-dir)
+              user-emacs-directory)))
+        (bootstrap-version 7))
+    (unless (file-exists-p bootstrap-file)
+      (with-current-buffer
+          (url-retrieve-synchronously
+           "https://raw.githubusercontent.com/radian-software/straight.el/develop/install.el"
+           'silent 'inhibit-cookies)
+        (goto-char (point-max))
+        (eval-print-last-sexp)))
+    (load bootstrap-file nil 'nomessage))
   )
 
 
@@ -592,70 +607,110 @@ This function is called at the very end of Spacemacs startup, after layer
 configuration.
 Put your configuration code here, except for variables that should be set
 before packages are loaded."
-  (envrc-global-mode)
-  (add-hook 'gdscript-mode-hook #'lsp-deferred)
-  (gdscript-mode)
-  (global-wakatime-mode)
+  (straight-use-package 'use-package)
+  (setq straight-use-package-by-default t) ;; always use straight
+  (require 'use-package-ensure)
 
-  (defun my/next ()
-    "Scroll down and recenter."
-    (interactive)
-    (forward-line (/ (window-total-height) 2))
-    (recenter)
+  (use-package rebinder
+    :straight (rebinder
+               :type git
+               :host nil :repo "git@github.com:darkstego/rebinder.el.git"
+               )
+    :config
+    (define-key evil-emacs-state-map (kbd "C-.") (rebinder-dynamic-binding "C-c"))
+    (define-key evil-emacs-state-map (kbd "C-/") (rebinder-dynamic-binding "C-x"))
+    (define-key evil-emacs-state-map (kbd "M-/") (rebinder-dynamic-binding "M-x"))
+    (define-key evil-emacs-state-map (kbd "M-SPC") (rebinder-dynamic-binding "M-m
+"))
+    (define-key evil-emacs-state-map (kbd "C-z") 'undo-only)
+    (define-key evil-emacs-state-map (kbd "C-c") 'kill-ring-save)
+    (define-key evil-emacs-state-map (kbd "C-x") 'kill-region)
+    (define-key evil-emacs-state-map (kbd "C-v") 'yank)
+    (define-key evil-emacs-state-map (kbd "C-s") 'save-buffer)
+    (define-key evil-emacs-state-map (kbd "C-S-z") 'undo-redo)
+    (define-key evil-emacs-state-map (kbd "C-r") 'undo-redo)
     )
 
-  (defun my/prior ()
-    "Scroll up and recenter."
-    (interactive)
-    (forward-line (- (/ (window-total-height) 2)))
-    (recenter)
-    )
 
-  (define-key evil-normal-state-map (kbd "C-f") 'isearch-forward)
-  (define-key evil-insert-state-map (kbd "C-f") 'isearch-forward)
-  ;; (define-key evil-normal-state-map (kbd "C-o") 'find-file)
-  ;; (define-key evil-insert-state-map (kbd "C-o") 'find-file)
-  (define-key evil-normal-state-map (kbd "C-s") 'save-buffer)
-  (define-key evil-insert-state-map (kbd "C-s") 'save-buffer)
-  (define-key evil-normal-state-map (kbd "C-z") 'undo)
-  (define-key evil-insert-state-map (kbd "C-z") 'undo)
-  (define-key evil-normal-state-map (kbd "C-S-Z") 'undo-redo)
-  (define-key evil-insert-state-map (kbd "C-S-Z") 'undo-redo)
-  (define-key evil-normal-state-map (kbd "C-b") 'switch-to-buffer)
+  ;; (define-key evil-normal-state-map (kbd "C-s") #'save-buffer)
+  ;; (define-key evil-insert-state-map (kbd "C-s") #'save-buffer)
 
-  (bind-keys
-   ;; editor "standards":
-   ("C-f" . isearch-forward)
-   ("C-o" . find-file)
-   ("C-s" . save-buffer)
-   ("C-z" . undo)
-   ("C-S-z" . undo-redo)
+  ;; (envrc-global-mode)
+  ;; (add-hook 'gdscript-mode-hook #'lsp-deferred)
+  ;; (gdscript-mode)
+  ;; (global-wakatime-mode)
 
-   ([remap isearch-forward] . helm-swoop)
-   ([remap find-file] . lazy-helm/spacemacs/helm-find-files)
-   ([remap switch-to-buffer] . lazy-helm/helm-mini)
 
-   ;; other "standards":
-   ("C--" . spacemacs/scale-down-font)
-   ("C-=" . spacemacs/scale-up-font)
-   ("<mouse-3>" . context-menu-open)
-   ("S-<down-mouse-1>" . mouse-set-mark)
+  ;; (defun my/next ()
+  ;;   "Scroll down and recenter."
+  ;;   (interactive)
+  ;;   (forward-line (/ (window-total-height) 4))
+  ;;   (recenter)
+  ;;   )
 
-   ;; other
-   ("C-<SPC>" . completion-at-point)
+  ;; (defun my/prior ()
+  ;;   "Scroll up and recenter."
+  ;;   (interactive)
+  ;;   (forward-line (- (/ (window-total-height) 4)))
+  ;;   (recenter)
+  ;;   )
 
-   ;; ("<f1>" . execute-extended-command)
-   ;; ("<f6>" . load-theme)
-   ;; ("C-S-f" . project-search)
-   ;; ("C-b" . switch-to-buffer)
-   ;; ("C-p" . project-find-file)
-   ;; ("C-S-p" . project-switch-project)
-   ;; ("C-i" . imenu)
-   ;; ("<escape>" . keyboard-escape-quit)
-   ("<next>" . my/next)
-   ("<prior>" . my/prior)
-   ;; ("TAB" . self-insert-command)
-   )
+  ;; (spacemacs/set-leader-keys "C-z" 'undo)
+
+  ;; (define-key global-map (kbd "C-.") (rebinder-dynamic-binding "C-c"))
+  ;; (define-key rebinder-mode-map (kbd "C-c") 'kill-ring-save)
+
+  ;; (define-key global-map (kbd "C-/") (rebinder-dynamic-binding "C-x"))
+  ;; (define-key rebinder-mode-map (kbd "C-x") 'kill-region)
+
+  ;; (define-key rebinder-mode-map (kbd "C-z") 'undo)
+
+
+  ;; ;; (define-key evil-normal-state-map (kbd "C-f") 'isearch-forward)
+  ;; ;; (define-key evil-insert-state-map (kbd "C-f") 'isearch-forward)
+  ;; ;; ;; (define-key evil-normal-state-map (kbd "C-o") 'find-file)
+  ;; ;; ;; (define-key evil-insert-state-map (kbd "C-o") 'find-file)
+  ;; ;; (define-key evil-normal-state-map (kbd "C-s") 'save-buffer)
+  ;; ;; (define-key evil-insert-state-map (kbd "C-s") 'save-buffer)
+  ;; ;; (define-key evil-normal-state-map (kbd "C-z") 'undo)
+  ;; ;; (define-key evil-insert-state-map (kbd "C-z") 'undo)
+  ;; ;; (define-key evil-normal-state-map (kbd "C-S-Z") 'undo-redo)
+  ;; ;; (define-key evil-insert-state-map (kbd "C-S-Z") 'undo-redo)
+  ;; ;; (define-key evil-normal-state-map (kbd "C-b") 'switch-to-buffer)
+
+  ;; (bind-keys
+  ;;  ;; editor "standards":
+  ;;  ("C-f" . isearch-forward)
+  ;;  ("C-o" . find-file)
+  ;;  ("C-s" . save-buffer)
+  ;;  ("C-z" . undo)
+  ;;  ("C-S-z" . undo-redo)
+
+  ;;  ([remap isearch-forward] . helm-swoop)
+  ;;  ([remap find-file] . lazy-helm/spacemacs/helm-find-files)
+  ;;  ([remap switch-to-buffer] . lazy-helm/helm-mini)
+
+  ;;  ;; other "standards":
+  ;;  ("C--" . spacemacs/scale-down-font)
+  ;;  ("C-=" . spacemacs/scale-up-font)
+  ;;  ("<mouse-3>" . context-menu-open)
+  ;;  ("S-<down-mouse-1>" . mouse-set-mark)
+
+  ;;  ;; other
+  ;;  ("C-<SPC>" . completion-at-point)
+
+  ;;  ;; ("<f1>" . execute-extended-command)
+  ;;  ;; ("<f6>" . load-theme)
+  ;;  ;; ("C-S-f" . project-search)
+  ;;  ;; ("C-b" . switch-to-buffer)
+  ;;  ;; ("C-p" . project-find-file)
+  ;;  ;; ("C-S-p" . project-switch-project)
+  ;;  ;; ("C-i" . imenu)
+  ;;  ;; ("<escape>" . keyboard-escape-quit)
+  ;;  ("<next>" . my/next)
+  ;;  ("<prior>" . my/prior)
+  ;;  ;; ("TAB" . self-insert-command)
+  ;;  )
   )
 
 

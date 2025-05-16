@@ -9,19 +9,15 @@
  use-short-answers t
  auto-save-default nil
  tab-width 4
- read-process-output-max (* 1024 1024)
  warning-minimum-level :emergency
  )
 
-
-
 (cua-mode) ;; C-x to cut on selection https://www.emacswiki.org/emacs/CuaMode
+(transient-mark-mode t)
 (global-display-line-numbers-mode) ;; display line numbers
 (electric-pair-mode)
 (scroll-bar-mode -1)
 (tool-bar-mode -1)
-
-
 (menu-bar-mode -1)
 ;; (recentf-mode)
 
@@ -95,9 +91,6 @@
   (recenter)
   )
 
-
-
-
 (defun my/copy-path-file ()
   "Copy path file name."
   (interactive)
@@ -128,9 +121,9 @@
 (defun my/get-selected-text ()
   (interactive)
   (if (use-region-p)
-	  (let ((regionp (buffer-substring (region-beginning) (region-end))))
-		(deactivate-mark)
-		regionp)))
+      (let ((regionp (buffer-substring (region-beginning) (region-end))))
+        (deactivate-mark)
+        regionp)))
 
 (defun my/goto-line (arg)
   "go to other window and go to line"
@@ -160,11 +153,11 @@
  ("S-<down-mouse-1>" . mouse-set-mark)
  ("C-b" . switch-to-buffer)
  ("C-p" . project-find-file)
- ("C-S-p" . project-switch-project)
+ ("C-S-p" . project-switch-project)("<mouse-3>" . context-menu-open)
  ;; ("C-o" . find-file)
  ("C-i" . imenu)
  ;; ("C-l" . nil) ; lsp-prefix
- ("<escape>" . keyboard-escape-quit) 
+ ("<escape>" . keyboard-escape-quit)
  ("<next>" . my/next)
  ("<prior>" . my/prior)
  ;;("S-<next>" . my/next-copy)
@@ -181,8 +174,8 @@
  ("C-3" . split-window-right)
  ("C-0" . delete-window)
  ("C-;" . query-replace-regexp)
- ("C-S-SPC" . exchange-point-and-mark)
- ("C-'" . my/goto-match-paren)
+ ;; ("C-S-SPC" . exchange-point-and-mark)
+ ("C-|" . my/goto-match-paren)
  ("C-\"" . my/goto-match-paren)
  ;; ("C-SPC" . execute-extended-command)
  )
@@ -192,7 +185,6 @@
   (bind-keys
    ("M-/" .  avy-goto-char)
    )
-  (bind-keys ) 
   )
 
 
@@ -222,8 +214,8 @@
   (completion-category-overrides '((file (styles basic partial-completion)))))
 
 (use-package consult
-  :config  
-  
+  :config
+
   (defun my/project-search ()
     "Search in project."
     (interactive)
@@ -235,18 +227,18 @@
     (consult-line (my/get-selected-text))
     )
   (bind-keys ([remap isearch-forward] . my/file-search)
-			 ([remap load-theme] . consult-theme)
-			 ([remap goto-line] . consult-goto-line)
-			 ([remap switch-to-buffer] . consult-buffer)
-			 ([remap project-search] .  my/project-search)
-			 ([remap project-switch-to-buffer] . consult-project-buffer)
-			 ([remap project-find-file] . consult-fd)
-			 ("C-S-v" . consult-yank-from-kill-ring)
-			 ;; b			 ("C-/" . consult-global-mark)
-			 ("C-e" . consult-flymake)
-			 ([remap imenu] . consult-imenu)
-			 ([remap Info-search] . consult-info)
-			 ))
+             ([remap load-theme] . consult-theme)
+             ([remap goto-line] . consult-goto-line)
+             ([remap switch-to-buffer] . consult-buffer)
+             ([remap project-search] .  my/project-search)
+             ([remap project-switch-to-buffer] . consult-project-buffer)
+             ([remap project-find-file] . consult-fd)
+             ("C-S-v" . consult-yank-from-kill-ring)
+             ;; b			 ("C-/" . consult-global-mark)
+             ("C-e" . consult-flymake)
+             ([remap imenu] . consult-imenu)
+             ([remap Info-search] . consult-info)
+             ))
 
 
 
@@ -266,9 +258,9 @@
   ;; makes it run the command under project root.
   (defun shou/fix-apheleia-project-dir (orig-fn &rest args)
     (let ((project (project-current)))
-	  (if (not (null project))
-		  (let ((default-directory (project-root project))) (apply orig-fn args))
-		(apply orig-fn args))))
+      (if (not (null project))
+          (let ((default-directory (project-root project))) (apply orig-fn args))
+        (apply orig-fn args))))
   (advice-add 'apheleia-format-buffer :around #'shou/fix-apheleia-project-dir)
   )
 
@@ -310,14 +302,14 @@
   :config
   (envrc-global-mode))
 
-;; (straight-use-package 'tree-sitter)
-;; (straight-use-package 'tree-sitter-langs)
+(straight-use-package 'tree-sitter)
+(straight-use-package 'tree-sitter-langs)
 
 ;; (use-package gdscript-mode
 ;;   :straight (gdscript-mode
-;; 	     :type git
-;; 	     :host github
-;; 	     :repo "godotengine/emacs-gdscript-mode"))
+;;       :type git
+;;       :host github
+;;       :repo "godotengine/emacs-gdscript-mode"))
 
 (use-package gdscript-mode)
 
@@ -325,33 +317,40 @@
 
 (use-package lsp-mode
   :init
+  (setq gc-cons-threshold 100000000)
+  (setq read-process-output-max (* 1024 1024)) ;; 1mb
   ;; set prefix for lsp-command-keymap (few alternatives - "C-l", "C-c l")
   (setq lsp-keymap-prefix "C-l")
+  :custom
+  (lsp-inlay-hint-enable nil)
+  (lsp-javascript-display-enum-member-value-hints t)
+  (lsp-javascript-display-parameter-name-hints "all")
+  (lsp-javascript-display-parameter-name-hints-when-argument-matches-name t)
+  (lsp-javascript-display-parameter-type-hints t)
+  (lsp-javascript-display-property-declaration-type-hints t)
+  (lsp-javascript-display-return-type-hints t)
+  (lsp-javascript-display-variable-type-hints t)
+  ( lsp-ui-doc-show-with-cursor t)
+  ( lsp-ui-sideline-show-code-actions nil)
   :config
-  ;; (setq lsp-ui-doc-show-with-cursor t)
-  (setq lsp-ui-sideline-show-code-actions t)
-  ;; (setq tab-width 4)
+  (lsp-completion-enable)
   :hook (
-		 ((;; js modes
-		   typescript-mode
-		   ;; emacs-lisp-mode
-		   js-ts-mode tsx-ts-mode typescript-ts-mode
-		   ;; config files modes
-		   json-ts-mode yaml-ts-mode
-		   ;; css modes
-		   scss-mode css-ts-mode
-		   ;; godot
-		   gdscript-ts-mode gdscript-mode
-		   ;; others
-		   bash-ts-mode
-		   gfm-mode markdown-mode
-		   dockerfile-ts-mode terraform-mode
-		   lua-mode python-ts-mode nix-mode) . lsp-deferred)
-		 (lsp-mode . lsp-enable-which-key-integration))
-  :commands lsp
-  ;; :bind
-  ;; (("C-." .    lsp-execute-code-action)
-  ;;  )
+         ((;; js modes
+           typescript-mode
+           ;; emacs-lisp-mode
+           js-ts-mode tsx-ts-mode typescript-ts-mode
+           ;; config files modes
+           json-ts-mode yaml-ts-mode
+           ;; css modes
+           scss-mode css-ts-mode
+           ;; godot
+           gdscript-ts-mode gdscript-mode
+           ;; others
+           bash-ts-mode
+           gfm-mode markdown-mode
+           dockerfile-ts-mode terraform-mode
+           lua-mode python-ts-mode nix-mode) . lsp-deferred)
+         (lsp-mode . lsp-enable-which-key-integration))
   )
 
 (use-package lsp-ui :commands lsp-ui-mode)
@@ -391,9 +390,9 @@
 
   ;; Hide the mode line of the Embark live/completions buffers
   (add-to-list 'display-buffer-alist
-			   '("\\`\\*Embark Collect \\(Live\\|Completions\\)\\*"
-				 nil
-				 (window-parameters (mode-line-format . none)))))
+               '("\\`\\*Embark Collect \\(Live\\|Completions\\)\\*"
+                 nil
+                 (window-parameters (mode-line-format . none)))))
 
 
 ;; (use-package app-launcher
