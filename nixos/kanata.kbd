@@ -7,20 +7,20 @@
 )
 
 (defalias
-  ;; layer-switch changes the base layer.
   col (layer-switch colemak-dh)
   qwt (layer-switch qwerty)
-  ;; tap: backtick (grave), hold: toggle layer-switching layer while held
-  mod lsft
-  spc spc
-  esc (tap-hold-press 100 100 esc (layer-while-held navigation))
+  mod (layer-while-held symbols)
+  ;; mod (layer-while-held numbers)
+
+  spc (tap-hold-release 0 200 spc (layer-while-held navigation))
+  esc (tap-hold-press 200 200 esc lctl)
   num (layer-while-held symbols)
 
   ;; modifiers
-  sft lsft
+  sft lalt
   ctl lalt
   met lmet
-  alt lctl
+  alt lsft
   tab tab
 )
 
@@ -31,23 +31,7 @@
   @esc a    r    s    t    g    m    n    e    i    o    '    ret
   @sft z    x    c    d    v    k    h    ,    .    /    rsft
   @ctl @met @alt           @spc           @mod @num rctl @qwt
-)
-
-(deflayer navigation
-  grv  f1   f2   f3   f4   f5   f6   f7   f8   f9   f10  f11  f12  bspc
-  @tab mute vold volu brdn brup j    home up   end  ;    [    ]    \
-  @esc a    r    s    t    g    pgup left down rght ret  '    ret
-  @sft z    x    c    d    v    pgdn bspc XX   del  /    rsft
-  @ctl @met @alt           @spc           @mod @num rctl @qwt
-)
-
-(deflayer symbols
-  grv  f1   f2   f3   f4   f5   f6   f7   f8   f9   f10  f11  f12  bspc
-  @tab mute vold volu brdn brup j    -    [    ]    =    S-[  S-]  \
-  @esc 1    2    3    4    5    6    7    8    9    0    `    ret
-  @sft S-1  S-2  S-3  S-4  S-5  S-6  S-7  S-8  S-9  S-0  rsft
-  @ctl @met @alt           @spc           @mod @num rctl @qwt
-)
+ )
 
 (deflayer qwerty
   grv  1    2    3    4    5    6    7    8    9    0    -    =    bspc
@@ -56,3 +40,20 @@
   lsft z    x    c    v    b    n    m    ,    .    /    rsft
   lctl lmet lalt           spc            ralt prnt rctl @col
 )
+
+(deflayer navigation
+  grv  1    2    3    4    5    6    7    8    9    0    -    =    bspc
+  @tab q    w    f    p    b    j    home up   end  ;    [    ]    \
+  @esc a    r    s    t    g    pgup left down rght ret  '    ret
+  @sft z    x    c    d    v    pgdn bspc spc  del  /    rsft
+  @ctl @met @alt           @spc           @mod @num rctl @qwt
+)
+
+(deflayer symbols
+  grv  f1   f2   f3   f4   f5   f6   f7   f8   f9   f10  f11  f12  bspc
+  @tab /    ,    .    \    `    `    -    =    [    ]    [    ]    \
+  @esc 1    2    3    4    5    6    7    8    9    0    '    ret
+  @sft \    ,    .    `    `    `    -    =    [    ]    rsft
+  @ctl @met @alt           @spc           @mod @num rctl @qwt
+)
+
