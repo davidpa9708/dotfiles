@@ -12,10 +12,10 @@
  warning-minimum-level :emergency
  )
 
-(cua-mode) ;; C-x to cut on selection https://www.emacswiki.org/emacs/CuaMode
-(transient-mark-mode t)
+;; (cua-mode) ;; C-x to cut on selection https://www.emacswiki.org/emacs/CuaMode
+;; (transient-mark-mode nil)
 (global-display-line-numbers-mode) ;; display line numbers
-(electric-pair-mode)
+;; (electric-pair-mode)
 (scroll-bar-mode -1)
 (tool-bar-mode -1)
 (menu-bar-mode -1)
@@ -148,37 +148,40 @@
  ("C-f" . isearch-forward)
  ("C-S-f" . project-search)
  ("C-s" . save-buffer)
+ ("C-z" . undo)
  ("C-S-z" . undo-redo)
  ("<mouse-3>" . context-menu-open)
  ("S-<down-mouse-1>" . mouse-set-mark)
  ("C-b" . switch-to-buffer)
  ("C-p" . project-find-file)
- ("C-S-p" . project-switch-project)("<mouse-3>" . context-menu-open)
+ ("C-S-p" . project-switch-project)
+ ("<mouse-3>" . context-menu-open)
  ;; ("C-o" . find-file)
  ("C-i" . imenu)
  ;; ("C-l" . nil) ; lsp-prefix
  ("<escape>" . keyboard-escape-quit)
  ("<next>" . my/next)
  ("<prior>" . my/prior)
- ;;("S-<next>" . my/next-copy)
- ;;("S-<prior>" . my/prior-copy)
+ ;; ("S-<next>" . my/next-copy)
+ ;; ("S-<prior>" . my/prior-copy)
  ("<home>" . back-to-indentation) ;; https://stackoverflow.com/a/12346740
  ;; ("<end>" . move-end-of-line)
  ("TAB" . self-insert-command)
- ("M-?" . goto-line)
- ("C-<escape>" . keyboard-quit)
- ("C-o" . other-window)
- ("C-:" . my/view-buffer-other-frame)
- ("C-1" . delete-other-windows)
- ("C-2" . split-window-below)
- ("C-3" . split-window-right)
- ("C-0" . delete-window)
- ("C-;" . query-replace-regexp)
+ ;; ("M-?" . goto-line)
+ ;; ("C-<escape>" . keyboard-quit)
+ ;; ("C-o" . other-window)
+ ;; ("C-:" . my/view-buffer-other-frame)
+ ;; ("C-1" . delete-other-windows)
+ ;; ("C-2" . split-window-below)
+ ;; ("C-3" . split-window-right)
+ ;; ("C-0" . delete-window)
+ ;; ("C-;" . query-replace-regexp)
  ;; ("C-S-SPC" . exchange-point-and-mark)
  ("C-|" . my/goto-match-paren)
  ("C-\"" . my/goto-match-paren)
  ;; ("C-SPC" . execute-extended-command)
  )
+
 
 (use-package avy
   :config
@@ -226,19 +229,20 @@
     (interactive)
     (consult-line (my/get-selected-text))
     )
-  (bind-keys ([remap isearch-forward] . my/file-search)
-             ([remap load-theme] . consult-theme)
-             ([remap goto-line] . consult-goto-line)
-             ([remap switch-to-buffer] . consult-buffer)
-             ([remap project-search] .  my/project-search)
-             ([remap project-switch-to-buffer] . consult-project-buffer)
-             ([remap project-find-file] . consult-fd)
-             ("C-S-v" . consult-yank-from-kill-ring)
-             ;; b			 ("C-/" . consult-global-mark)
-             ("C-e" . consult-flymake)
-             ([remap imenu] . consult-imenu)
-             ([remap Info-search] . consult-info)
-             ))
+  (bind-keys
+   ;; ([remap isearch-forward] . my/file-search)
+   ([remap load-theme] . consult-theme)
+   ([remap goto-line] . consult-goto-line)
+   ([remap switch-to-buffer] . consult-buffer)
+   ([remap project-search] .  my/project-search)
+   ([remap project-switch-to-buffer] . consult-project-buffer)
+   ([remap project-find-file] . consult-fd)
+   ("C-S-v" . consult-yank-from-kill-ring)
+   ;; b			 ("C-/" . consult-global-mark)
+   ("C-e" . consult-flymake)
+   ([remap imenu] . consult-imenu)
+   ([remap Info-search] . consult-info)
+   ))
 
 
 
@@ -286,17 +290,17 @@
    magit-post-refresh-hook diff-hl-magit-post-refresh
    ))
 
-(use-package doom-modeline
-  :config
-  (doom-modeline-mode))
+;; (use-package doom-modeline
+;;   :config
+;; (doom-modeline-mode))
 
 ;; (straight-use-package
 ;;  '(awesome-tray :type git :host github :repo "manateelazycat/awesome-tray.git")
 ;;  )
 
-(use-package dirvish
-  :config
-  (dirvish-override-dired-mode))
+;; (use-package dirvish
+;;   :config
+;;   (dirvish-override-dired-mode))
 
 (use-package envrc
   :config
@@ -320,7 +324,7 @@
   (setq gc-cons-threshold 100000000)
   (setq read-process-output-max (* 1024 1024)) ;; 1mb
   ;; set prefix for lsp-command-keymap (few alternatives - "C-l", "C-c l")
-  (setq lsp-keymap-prefix "C-l")
+  (setq lsp-keymap-prefix "C-c l")
   :custom
   (lsp-inlay-hint-enable nil)
   (lsp-javascript-display-enum-member-value-hints t)
