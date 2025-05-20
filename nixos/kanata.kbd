@@ -1,59 +1,69 @@
 (defsrc
-  grv  1    2    3    4    5    6    7    8    9    0    -    =    bspc
-  tab  q    w    e    r    t    y    u    i    o    p    [    ]    \
-  caps a    s    d    f    g    h    j    k    l    ;    '    ret
-  lsft z    x    c    v    b    n    m    ,    .    /    rsft
-  lctl lmet lalt           spc            ralt prnt rctl wkup
-)
+	grv  1    2    3    4    5    6    7    8    9    0    -    =    bspc
+	tab  q    w    e    r    t    y    u    i    o    p    [    ]    \
+	caps a    s    d    f    g    h    j    k    l    ;    '    ret
+	lsft z    x    c    v    b    n    m    ,    .    /    rsft
+	lctl lmet lalt           spc            ralt prnt rctl wkup
+	)
+
 
 (defalias
   col (layer-switch colemak-dh)
   qwt (layer-switch qwerty)
-  mod (layer-while-held symbols)
-  ;; mod (layer-while-held numbers)
-
-  spc (tap-hold-release 0 200 spc (layer-while-held navigation))
-  esc (tap-hold-press 200 200 esc lctl)
-  num (layer-while-held symbols)
 
   ;; modifiers
+  tab (tap-hold-press 200 200 tab (layer-while-held symbols))
+  cap (tap-hold-press 200 200 esc lctl)
   sft lalt
-  ctl lalt
-  met lmet
-  alt lsft
-  tab tab
-)
 
+  ctl lmet
+  met (layer-while-held symbols)
+  alt lshft
+
+  spc (tap-hold-release 0 200 spc (layer-while-held navigation))
+
+  art (layer-while-held navigation)
+  mer (layer-while-held symbols)
+  ctr (layer-while-held symbols)
+
+  rsf (tap-hold-release 0 200 S-0 rsft)
+
+  a (tap-hold-release 0 200 a lctl)
+  o (tap-hold-release 0 200 o rctl)
+  z (tap-hold-release 0 200 z lalt)
+  / (tap-hold-release 0 200 / ralt)
+  )
 
 (deflayer colemak-dh
-  grv  1    2    3    4    5    6    7    8    9    0    -    =    bspc
-  @tab q    w    f    p    b    j    l    u    y    ;    [    ]    \
-  @esc a    r    s    t    g    m    n    e    i    o    '    ret
-  @sft z    x    c    d    v    k    h    ,    .    /    rsft
-  @ctl @met @alt           @spc           @mod @num rctl @qwt
- )
+	grv  1    2    3    4    5    6    7    8    9    0    -    =    bspc
+ 	@tab q    w    f    p    b    j    l    u    y    ;    [    ]    \
+	@cap @a   r    s    t    g    m    n    e    i    @o   '    ret
+	@sft @z   x    c    d    v    k    h    ,    .    @/   @rsf
+	@ctl @met @alt           @spc           @art @mer rctl @qwt
+	)
 
 (deflayer qwerty
-  grv  1    2    3    4    5    6    7    8    9    0    -    =    bspc
-  tab  q    w    e    r    t    y    u    i    o    p    [    ]    \
-  caps a    s    d    f    g    h    j    k    l    ;    '    ret
-  lsft z    x    c    v    b    n    m    ,    .    /    rsft
-  lctl lmet lalt           spc            ralt prnt rctl @col
-)
+	grv  1    2    3    4    5    6    7    8    9    0    -    =    bspc
+	tab  q    w    e    r    t    y    u    i    o    p    [    ]    \
+	caps a    s    d    f    g    h    j    k    l    ;    '    ret
+	lsft z    x    c    v    b    n    m    ,    .    /    rsft
+	lctl lmet lalt           spc            ralt prnt rctl @col
+	)
 
 (deflayer navigation
-  grv  1    2    3    4    5    6    7    8    9    0    -    =    bspc
-  @tab q    w    f    p    b    j    home up   end  ;    [    ]    \
-  @esc a    r    s    t    g    pgup left down rght ret  '    ret
-  @sft z    x    c    d    v    pgdn bspc spc  del  /    rsft
-  @ctl @met @alt           @spc           @mod @num rctl @qwt
-)
+	grv  1    2    3    4    5    6    7    8    9    0    -    =    bspc
+	@tab q    w    f    p    b    j    home up   end  ;    [    ]    \
+	@cap @a   r    s    t    g    pgup left down rght ret  '    ret
+	@sft @z   x    c    d    v    pgdn bspc spc  del  @/    @rsf
+	@ctl @met @alt           @spc           @art @mer rctl @qwt
+	)
+
 
 (deflayer symbols
-  grv  f1   f2   f3   f4   f5   f6   f7   f8   f9   f10  f11  f12  bspc
-  @tab /    ,    .    \    `    `    -    =    [    ]    [    ]    \
-  @esc 1    2    3    4    5    6    7    8    9    0    '    ret
-  @sft \    ,    .    `    `    `    -    =    [    ]    rsft
-  @ctl @met @alt           @spc           @mod @num rctl @qwt
-)
+	grv  f1   f2   f3   f4   f5   f6   f7   f8   f9   f10  f11  f12  bspc
+	@tab mute vold volu brdn brup j    [    ]    S-[  S-]  [    ]    \
+	@cap 1    2    3    4    5    6    7    8    9    0   '    ret
+	@sft S-1  S-2  S-3  S-4  S-5  S-6  S-7  S-8  S-9  S-0  @rsf
+	@ctl @met @alt           @spc           @art @mer rctl @qwt
+	)
 
