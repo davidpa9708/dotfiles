@@ -18,11 +18,11 @@
 
   ctl lmet
   met (layer-while-held symbols)
-  alt lshft
+  alt (tap-hold-press 200 200 tab lshft)
 
   spc (tap-hold-release 0 200 spc (layer-while-held navigation))
 
-  art (layer-while-held navigation)
+  art (tap-hold-release 0 200 S-tab (layer-while-held navigation))
   mer (layer-while-held symbols)
   ctr (layer-while-held symbols)
 
