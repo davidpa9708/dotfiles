@@ -19,11 +19,12 @@
  fast-but-imprecise-scrolling t
  ;; jit-lock-defer-time 0
  isearch-wrap-pause 'no
+ column-number-mode t
  )
 
 ;; (cua-mode) ;; C-x to cut on selection https://www.emacswiki.org/emacs/CuaMode
 ;; (transient-mark-mode nil)
-(global-display-line-numbers-mode) ;; display line numbers
+;; (global-display-line-numbers-mode) ;; display line numbers
 ;; (electric-pair-mode)
 (scroll-bar-mode -1)
 (tool-bar-mode -1)
@@ -183,10 +184,19 @@ With argument ARG, do this that many times."
  ("C-<left>" .  my/left-word)
  ("C-<delete>" . my/kill-word)
  ("C-<backspace>" . my/backward-kill-word)
+ ("<next>" . my/next)
+ ("<prior>" . my/prior)
+ ("<home>" . back-to-indentation) ;; https://stackoverflow.com/a/12346740
+ ("C-e" . next-error)
+ ("C-S-E" . previous-error)
+ ("C-|" . my/goto-match-paren)
+ ("C-\"" . my/goto-match-paren)
+ ;; font / theme
  ("C--" . my/text-scale-decrease)
  ("C-=" . my/text-scale-increase)
  ("<f1>" . execute-extended-command)
  ("<f6>" . load-theme)
+ ;; others
  ("C-." . completion-at-point)
  ("C-f" . isearch-forward)
  ("C-S-f" . project-search)
@@ -199,13 +209,10 @@ With argument ARG, do this that many times."
  ("C-p" . project-find-file)
  ("C-S-p" . project-switch-project)
  ("<mouse-3>" . context-menu-open)
- ;; ("C-o" . find-file)
+ ("C-o" . find-file)
  ("C-i" . imenu)
  ;; ("C-l" . nil) ; lsp-prefix
- ("<escape>" . keyboard-escape-quit)
- ("<next>" . my/next)
- ("<prior>" . my/prior)
- ("<home>" . back-to-indentation) ;; https://stackoverflow.com/a/12346740
+ ;; ("<escape>" . keyboard-escape-quit)
  ;; ("<end>" . move-end-of-line)
  ("TAB" . self-insert-command)
  ;; ("M-?" . goto-line)
@@ -216,13 +223,93 @@ With argument ARG, do this that many times."
  ;; ("C-2" . split-window-below)
  ;; ("C-3" . split-window-right)
  ;; ("C-0" . delete-window)
- ;; ("C-;" . query-replace-regexp)		   
+ ;; ("C-;" . query-replace-regexp)
  ;; ("C-S-SPC" . exchange-point-and-mark)
- ("C-|" . my/goto-match-paren)
- ("C-\"" . my/goto-match-paren)
  ;; ("C-SPC" . execute-extended-command)
  )
 
+;; (use-package undo-fu
+;;   :init
+;;   ;; https://github.com/emacsmirror/undo-fu?tab=readme-ov-file#undo-limits
+;;   (setq undo-limit 67108864) ; 64mb.
+;;   (setq undo-strong-limit 100663296) ; 96mb.
+;;   (setq undo-outer-limit 1006632960) ; 960mb.
+;;   :config
+;;   (bind-keys
+;;    ("C-z" . undo-fu-only-undo)
+;;    ("C-S-z" . undo-fu-only-redo)))
+
+;; (use-package minimap
+;;   :init
+;;   (setq minimap-window-location 'right)
+;;   (setq minimap-width-fraction 0.15)
+;;   (setq minimap-update-delay 0)
+;;   :config
+;;   (minimap-mode))
+
+
+(use-package dashboard
+  :init
+  (setq initial-buffer-choice (lambda () (get-buffer-create dashboard-buffer-name)))
+  :config
+  (dashboard-setup-startup-hook))
+
+(use-package highlight-indent-guides
+  :init
+  (setq highlight-indent-guides-method 'character)
+  (setq highlight-indent-guides-auto-odd-face-perc 50)
+  (setq highlight-indent-guides-auto-even-face-perc 50)
+  (setq highlight-indent-guides-auto-character-face-perc 80)
+  :hook
+  (prog-mode-hook . highlight-indent-guides-mode)
+  )
+
+;; (use-package line-reminder
+;;   :init
+;;   (setq line-reminder-show-option 'indicators)
+;;   :config
+;;   (global-line-reminder-mode t))
+
+;; (use-package focus
+;;   :config (focus-mode))
+
+
+(use-package dimmer
+  :init
+  ;; (setq dimmer-adjustment-mode 'both)
+  (setq dimmer-fraction 0.4)
+  
+  :config (dimmer-mode))
+
+
+(windmove-default-keybindings '(meta ctrl))
+(windmove-swap-states-default-keybindings '(meta ctrl shift))
+
+(use-package golden-ratio
+  :config
+  (golden-ratio-mode))
+
+(use-package buffer-name-relative
+  :config
+  (buffer-name-relative-mode)
+  )
+
+(use-package sideline
+  :init
+  (setq sideline-backends-left-skip-current-line t   ; don't display on current line (left)
+		sideline-backends-right-skip-current-line t  ; don't display on current line (right)
+		sideline-order-left 'down                    ; or 'up
+		sideline-order-right 'up                     ; or 'down
+		sideline-format-left "%s   "                 ; format for left aligment
+		sideline-format-right "   %s"                ; format for right aligment
+		sideline-priority 100                        ; overlays' priority
+		sideline-display-backend-name t)             ; display the backend name
+  :hook (flycheck-mode . sideline-mode)
+  )
+
+(use-package sideline-flycheck :init (setq sideline-backends-right '(sideline-flycheck)) :hook (flycheck-mode . sideline-flycheck-setup))
+(use-package sideline-lsp :init (setq sideline-backends-right '(sideline-lsp)))
+(use-package sideline-blame :init (setq sideline-backends-left '((sideline-blame . up))))
 
 (use-package avy
   :config
@@ -271,7 +358,7 @@ With argument ARG, do this that many times."
     (consult-line (my/get-selected-text))
     )
   (bind-keys
-   ;; ([remap isearch-forward] . my/file-search)
+   ([remap isearch-forward] . my/file-search)
    ([remap load-theme] . consult-theme)
    ([remap goto-line] . consult-goto-line)
    ([remap switch-to-buffer] . consult-buffer)
@@ -280,7 +367,6 @@ With argument ARG, do this that many times."
    ([remap project-find-file] . consult-fd)
    ("C-S-v" . consult-yank-from-kill-ring)
    ;; b			 ("C-/" . consult-global-mark)
-   ("C-e" . consult-flymake)
    ([remap imenu] . consult-imenu)
    ([remap Info-search] . consult-info)
    ))
@@ -307,11 +393,7 @@ With argument ARG, do this that many times."
   (load-theme 'doom-bluloco-dark t)
   )
 
-(use-package emacs-solaire-mode
-  :straight (gdscript-mode
-			 :type git
-			 :host github
-			 :repo "hlissner/emacs-solaire-mode")
+(use-package solaire-mode
   :config
   (solaire-global-mode +1))
 
@@ -402,10 +484,9 @@ With argument ARG, do this that many times."
   (lsp-javascript-display-property-declaration-type-hints t)
   (lsp-javascript-display-return-type-hints t)
   (lsp-javascript-display-variable-type-hints t)
-  ( lsp-ui-doc-show-with-cursor t)
-  ( lsp-ui-sideline-show-code-actions nil)
-  :config
-  (lsp-completion-enable)
+  ;;(lsp-ui-doc-show-with-cursor t)
+  ;;(lsp-ui-sideline-show-code-actions nil)
+  (lsp-completion-enable t)
   :hook (
          ((;; js modes
 		   typescript-mode
@@ -422,14 +503,21 @@ With argument ARG, do this that many times."
 		   gfm-mode markdown-mode
 		   dockerfile-ts-mode terraform-mode
 		   lua-mode python-ts-mode nix-mode) . lsp-deferred)
-         (lsp-mode . lsp-enable-which-key-integration))
+         (lsp-mode . lsp-enable-which-key-integration)
+		 (lsp-mode . sideline-mode)
+		 )
+  
   )
 
-(use-package lsp-ui :commands lsp-ui-mode)
+;; (use-package lsp-ui
+;;   :init (setq lsp-ui-sideline-enable nil)
+;;   :commands lsp-ui-mode)
 
 (use-package flycheck
   :config
-  (add-hook 'after-init-hook #'global-flycheck-mode))
+  (add-hook 'after-init-hook #'global-flycheck-mode)
+  (bind-keys ([remap next-error] . flycheck-next-error)))
+(bind-keys ([remap previous-error] . flycheck-previous-error))
 
 (use-package consult-flycheck
   :config
@@ -474,3 +562,27 @@ With argument ARG, do this that many times."
 ;; https://github.com/domtronn/all-the-icons.el
 (use-package all-the-icons
   :if (display-graphic-p))
+
+(use-package nerd-icons
+  ;; :custom
+  ;; The Nerd Font you want to use in GUI
+  ;; "Symbols Nerd Font Mono" is the default and is recommended
+  ;; but you can use any other Nerd Font if you want
+  ;; (nerd-icons-font-family "Symbols Nerd Font Mono")
+  )
+
+
+(use-package perfect-margin
+  :init
+  (setq perfect-margin-only-set-left-margin t)
+  :config (perfect-margin-mode 1))
+
+(use-package otpp
+  :straight t
+  :after project
+  :init
+  ;; Enable `otpp-mode` globally
+  (otpp-mode 1)
+  ;; If you want to advice the commands in `otpp-override-commands`
+  ;; to be run in the current's tab (so, current project's) root directory
+  (otpp-override-mode 1))
