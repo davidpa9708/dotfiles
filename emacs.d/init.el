@@ -133,26 +133,35 @@
         regionp)))
 
 (defun my/goto-line (arg)
-  "go to other window and go to line"
+  "Go to other window and go to line."
   (interactive "p")
   (call-interactively 'other-window)
   (forward-line (-  (my/get-selected-text) (string-to-number (format-mode-line "%l"))))
   )
 
 (defun my/view-buffer-other-frame (arg)
-  "go to other window and go to line"
+  "Go to other window and go to line."
   (interactive "p")
   (view-buffer-other-frame (current-buffer))
   )
 
 (defun my/right-word (arg)
-  "right word"
+  "Right word."
   (interactive "^p")
-  (re-search-forward "\s[^\s]\\|[^\s]\s" nil     t arg)
-  (forward-char (* -1 arg)))
+  (forward-same-syntax arg)
+  ;; (re-search-forward
+  ;;  (if (> arg 0)
+  ;; 	   "\\S-\\s-"
+  ;; 	 "\\s-\\S-")
+  ;;  nil t arg)
+  ;; (if (not (eolp))
+  ;; (backward-char arg)
+  ;; )
+  )
+
 
 (defun my/left-word (arg)
-  "left word"
+  "Left word"
   (interactive "^p")
   (my/right-word (* -1 arg)))
 
