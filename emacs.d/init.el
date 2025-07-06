@@ -145,8 +145,35 @@
   (view-buffer-other-frame (current-buffer))
   )
 
+(defun my/right-word (arg)
+  "right word"
+  (interactive "^p")
+  (re-search-forward "\s[^\s]\\|[^\s]\s" nil     t arg)
+  (forward-char (* -1 arg)))
+
+(defun my/left-word (arg)
+  "left word"
+  (interactive "^p")
+  (my/right-word (* -1 arg)))
+
+(defun my/kill-word (arg)
+  "Kill characters forward until encountering the end of a word.
+With argument ARG, do this that many times."
+  (interactive "p")
+  (kill-region (point) (progn (my/right-word arg) (point))))
+
+(defun my/backward-kill-word (arg)
+  "Kill characters forward until encountering the end of a word.
+With argument ARG, do this that many times."
+  (interactive "p")
+  (my/kill-word (* -1 arg)))
 
 (bind-keys
+ ;; navigation
+ ("C-<right>" .  my/right-word)
+ ("C-<left>" .  my/left-word)
+ ("C-<delete>" . my/kill-word)
+ ("C-<backspace>" . my/backward-kill-word)
  ("C--" . my/text-scale-decrease)
  ("C-=" . my/text-scale-increase)
  ("<f1>" . execute-extended-command)
