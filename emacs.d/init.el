@@ -86,32 +86,14 @@
 
 (defun my/next ()
   "Scroll down and recenter."
-  (interactive)
+  (interactive "^")
   (forward-line (/ (window-total-height) 2))
   (recenter)
   )
 
 (defun my/prior ()
   "Scroll up and recenter."
-  (interactive)
-  (forward-line (- (/ (window-total-height) 2)))
-  (recenter)
-  )
-
-(defun my/next-copy ()
-  "Scroll down and recenter."
-  (interactive)
-  (if (not (region-active-p))
-      (call-interactively 'push-mark-command))
-  (forward-line (/ (window-total-height) 2))
-  (recenter)
-  )
-
-(defun my/prior-copy ()
-  "Scroll up and recenter."
-  (interactive)
-  (if (not (region-active-p))
-      (call-interactively 'push-mark-command))
+  (interactive "^")
   (forward-line (- (/ (window-total-height) 2)))
   (recenter)
   )
@@ -187,8 +169,6 @@
  ("<escape>" . keyboard-escape-quit)
  ("<next>" . my/next)
  ("<prior>" . my/prior)
- ;; ("S-<next>" . my/next-copy)
- ;; ("S-<prior>" . my/prior-copy)
  ("<home>" . back-to-indentation) ;; https://stackoverflow.com/a/12346740
  ;; ("<end>" . move-end-of-line)
  ("TAB" . self-insert-command)
