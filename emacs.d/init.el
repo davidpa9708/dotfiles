@@ -10,6 +10,15 @@
  auto-save-default nil
  tab-width 4
  warning-minimum-level :emergency
+ search-whitespace-regexp ".*"
+ ;;  project-mode-line t
+
+ scroll-preserve-screen-position nil
+ mouse-wheel-follow-mouse t
+ pixel-scroll-precision-use-momentum t
+ fast-but-imprecise-scrolling t
+ ;; jit-lock-defer-time 0
+ isearch-wrap-pause 'no
  )
 
 ;; (cua-mode) ;; C-x to cut on selection https://www.emacswiki.org/emacs/CuaMode
@@ -19,7 +28,14 @@
 (scroll-bar-mode -1)
 (tool-bar-mode -1)
 (menu-bar-mode -1)
-;; (recentf-mode)
+(global-hl-line-mode t)
+
+
+;; (recent-mode)
+
+(add-to-list 'default-frame-alist
+             '(font . "SourceCodePro-12"))
+
 
 ;; straight https://github.com/radian-software/straight.el
 (defvar bootstrap-version)
@@ -45,6 +61,15 @@
 ;; go fetch packages
 ;; might not need it with straight
 (require 'use-package-ensure)
+
+;; (use-package fast-scroll
+;;   :defer 1
+;;   :hook
+;;   (fast-scroll-start . (lambda () (flycheck-mode -1)))
+;;   (fast-scroll-end . (lambda () (flycheck-mode 1)))
+;;   :config
+;;   (fast-scroll-config)
+;;   (fast-scroll-mode 1))
 
 (defun my/text-scale-increase ()
   "Increase font size."
@@ -175,7 +200,7 @@
  ;; ("C-2" . split-window-below)
  ;; ("C-3" . split-window-right)
  ;; ("C-0" . delete-window)
- ;; ("C-;" . query-replace-regexp)
+ ;; ("C-;" . query-replace-regexp)		   
  ;; ("C-S-SPC" . exchange-point-and-mark)
  ("C-|" . my/goto-match-paren)
  ("C-\"" . my/goto-match-paren)
@@ -244,14 +269,41 @@
    ([remap Info-search] . consult-info)
    ))
 
-
+(use-package rg)
 
 (use-package which-key
   :config (which-key-mode))
 
 (use-package ef-themes
   :config
-  (load-theme 'ef-owl t))
+  ;; (load-theme 'ef-owl t)
+  )
+
+(use-package doom-themes
+  :ensure t
+  :custom
+  ;; Global settings (defaults)
+  (doom-themes-enable-bold t)   ; if nil, bold is universally disabled
+  (doom-themes-enable-italic t) ; if nil, italics is universally disabled
+  ;; for treemacs users
+  ;; (doom-themes-treemacs-theme "doom-atom") ; use "doom-colors" for less minimal icon theme
+  :config
+  (load-theme 'doom-bluloco-dark t)
+  )
+
+(use-package emacs-solaire-mode
+  :straight (gdscript-mode
+			 :type git
+			 :host github
+			 :repo "hlissner/emacs-solaire-mode")
+  :config
+  (solaire-global-mode +1))
+
+(use-package  spacemacs-theme
+  :config
+  ;; (load-theme 'spacemacs-dark)
+  )
+
 
 ;; commenting due to some formatting issues
 (use-package apheleia
@@ -262,8 +314,8 @@
   ;; makes it run the command under project root.
   (defun shou/fix-apheleia-project-dir (orig-fn &rest args)
     (let ((project (project-current)))
-      (if (not (null project))
-          (let ((default-directory (project-root project))) (apply orig-fn args))
+	  (if (not (null project))
+		  (let ((default-directory (project-root project))) (apply orig-fn args))
         (apply orig-fn args))))
   (advice-add 'apheleia-format-buffer :around #'shou/fix-apheleia-project-dir)
   )
@@ -290,9 +342,9 @@
    magit-post-refresh-hook diff-hl-magit-post-refresh
    ))
 
-;; (use-package doom-modeline
-;;   :config
-;; (doom-modeline-mode))
+(use-package doom-modeline
+  :config
+  (doom-modeline-mode))
 
 ;; (straight-use-package
 ;;  '(awesome-tray :type git :host github :repo "manateelazycat/awesome-tray.git")
@@ -340,20 +392,20 @@
   (lsp-completion-enable)
   :hook (
          ((;; js modes
-           typescript-mode
-           ;; emacs-lisp-mode
-           js-ts-mode tsx-ts-mode typescript-ts-mode
-           ;; config files modes
-           json-ts-mode yaml-ts-mode
-           ;; css modes
-           scss-mode css-ts-mode
-           ;; godot
-           gdscript-ts-mode gdscript-mode
-           ;; others
-           bash-ts-mode
-           gfm-mode markdown-mode
-           dockerfile-ts-mode terraform-mode
-           lua-mode python-ts-mode nix-mode) . lsp-deferred)
+		   typescript-mode
+		   ;; emacs-lisp-mode
+		   js-ts-mode tsx-ts-mode typescript-ts-mode
+		   ;; config files modes
+		   json-ts-mode yaml-ts-mode
+		   ;; css modes
+		   scss-mode css-ts-mode
+		   ;; godot
+		   gdscript-ts-mode gdscript-mode
+		   ;; others
+		   bash-ts-mode
+		   gfm-mode markdown-mode
+		   dockerfile-ts-mode terraform-mode
+		   lua-mode python-ts-mode nix-mode) . lsp-deferred)
          (lsp-mode . lsp-enable-which-key-integration))
   )
 
@@ -394,7 +446,7 @@
 
   ;; Hide the mode line of the Embark live/completions buffers
   (add-to-list 'display-buffer-alist
-               '("\\`\\*Embark Collect \\(Live\\|Completions\\)\\*"
+			   '("\\`\\*Embark Collect \\(Live\\|Completions\\)\\*"
                  nil
                  (window-parameters (mode-line-format . none)))))
 
