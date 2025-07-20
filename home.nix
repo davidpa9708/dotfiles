@@ -126,10 +126,14 @@ in {
     starship.enable = true;
     starship.enableFishIntegration = true;
     git = {
-      enable = true;
+      package = pkgs.gitFull;
+	  enable = true;
       userName = "David Perez Alvarez";
       userEmail = "david@leddgroup.com";
-      extraConfig = { core.sshCommand = "ssh -i ~/.ssh/personal"; };
+      extraConfig = {
+	  	core.sshCommand = "ssh -i ~/.ssh/personal";
+	  	credential.helper = "libsecret";
+	  };
       includes = [{
         condition = "gitdir:~/projects/inpt/";
         contents.user.name = "David";
