@@ -12,18 +12,21 @@
   qwt (layer-switch qwerty)
 
   ;; modifiers
-  tab (tap-hold-press 200 200 tab (layer-while-held symbols))
+  ;; tab (tap-hold-press 200 200 tab (layer-while-held symbols))
+  tab tab
   cap (tap-hold-press 200 200 esc lctl)
   sft lalt
 
-  ctl lmet
-  met (layer-while-held symbols)
+  ctl (layer-while-held symbols)
+  met lmet
   ;; alt (tap-hold-press 200 200 tab lshft)
   alt lshft
 
+  ;; spc spc
   spc (tap-hold-release 0 200 spc (layer-while-held navigation))
 
-  art (tap-hold-release 0 200 S-tab (layer-while-held navigation))
+  art (layer-while-held navigation)
+  ;; art (tap-hold-release 0 200 S-tab (layer-while-held navigation))
   mer (layer-while-held symbols)
   ctr (layer-while-held symbols)
 
@@ -62,7 +65,7 @@
 
 (deflayer symbols
 	grv  f1   f2   f3   f4   f5   f6   f7   f8   f9   f10  f11  f12  bspc
-	@tab mute vold volu brdn brup j    [    ]    S-[  S-]  [    ]    \
+	@tab mute vold volu brdn brup `    [    ]    S-[  S-]  [    ]    \
 	@cap 1    2    3    4    5    6    7    8    9    0   '    ret
 	@sft S-1  S-2  S-3  S-4  S-5  S-6  S-7  S-8  S-9  S-0  @rsf
 	@ctl @met @alt           @spc           @art @mer rctl @qwt

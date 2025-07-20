@@ -178,6 +178,16 @@ With argument ARG, do this that many times."
   (interactive "p")
   (my/kill-word (* -1 arg)))
 
+(defun my/tab-bar-move-next ()
+  ""
+  (interactive)
+  (tab-bar-move-tab 1))
+
+(defun my/tab-bar-move-previous ()
+  ""
+  (interactive)
+  (tab-bar-move-tab -1))
+
 (bind-keys
  ;; navigation
  ("C-<right>" .  my/right-word)
@@ -226,6 +236,12 @@ With argument ARG, do this that many times."
  ;; ("C-;" . query-replace-regexp)
  ;; ("C-S-SPC" . exchange-point-and-mark)
  ;; ("C-SPC" . execute-extended-command)
+ ("C-S-w" . tab-close)
+ ("C-S-t" . tab-new)
+ ("C-<next>" . tab-next)
+ ("C-<prior>" . tab-previous)
+ ("C-S-<next>" .  my/tab-bar-move-next)
+ ("C-S-<prior>" .  my/tab-bar-move-previous)
  )
 
 ;; (use-package undo-fu
@@ -282,8 +298,8 @@ With argument ARG, do this that many times."
   :config (dimmer-mode))
 
 
-(windmove-default-keybindings '(meta ctrl))
-(windmove-swap-states-default-keybindings '(meta ctrl shift))
+(windmove-default-keybindings '(meta))
+(windmove-swap-states-default-keybindings '(meta shift))
 
 (use-package golden-ratio
   :config
@@ -484,7 +500,7 @@ With argument ARG, do this that many times."
   (lsp-javascript-display-property-declaration-type-hints t)
   (lsp-javascript-display-return-type-hints t)
   (lsp-javascript-display-variable-type-hints t)
-  ;;(lsp-ui-doc-show-with-cursor t)
+  (lsp-ui-doc-show-with-cursor nil)
   ;;(lsp-ui-sideline-show-code-actions nil)
   (lsp-completion-enable t)
   :hook (
@@ -503,15 +519,16 @@ With argument ARG, do this that many times."
 		   gfm-mode markdown-mode
 		   dockerfile-ts-mode terraform-mode
 		   lua-mode python-ts-mode nix-mode) . lsp-deferred)
-         (lsp-mode . lsp-enable-which-key-integration)
 		 (lsp-mode . sideline-mode)
+         (lsp-mode . lsp-enable-which-key-integration)
 		 )
-  
+  :commands (lsp lsp-deferred)
   )
 
-;; (use-package lsp-ui
-;;   :init (setq lsp-ui-sideline-enable nil)
-;;   :commands lsp-ui-mode)
+(use-package lsp-ui
+  :init (setq lsp-ui-sideline-enable nil)
+  :commands lsp-ui-mode
+  )
 
 (use-package flycheck
   :config
