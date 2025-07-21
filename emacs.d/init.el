@@ -264,11 +264,11 @@ With argument ARG, do this that many times."
 ;;   (minimap-mode))
 
 
-(use-package dashboard
-  :init
-  (setq initial-buffer-choice (lambda () (get-buffer-create dashboard-buffer-name)))
-  :config
-  (dashboard-setup-startup-hook))
+;; (use-package dashboard
+;;   :init
+;;   (setq initial-buffer-choice (lambda () (get-buffer-create dashboard-buffer-name)))
+;;   :config
+;;   (dashboard-setup-startup-hook))
 
 (use-package highlight-indent-guides
   :init
@@ -310,22 +310,22 @@ With argument ARG, do this that many times."
   (buffer-name-relative-mode)
   )
 
-(use-package sideline
-  :init
-  (setq sideline-backends-left-skip-current-line t   ; don't display on current line (left)
-		sideline-backends-right-skip-current-line t  ; don't display on current line (right)
-		sideline-order-left 'down                    ; or 'up
-		sideline-order-right 'up                     ; or 'down
-		sideline-format-left "%s   "                 ; format for left aligment
-		sideline-format-right "   %s"                ; format for right aligment
-		sideline-priority 100                        ; overlays' priority
-		sideline-display-backend-name t)             ; display the backend name
-  :hook (flycheck-mode . sideline-mode)
-  )
+;; (use-package sideline
+;;   :init
+;;   (setq sideline-backends-left-skip-current-line t   ; don't display on current line (left)
+;; 		sideline-backends-right-skip-current-line t  ; don't display on current line (right)
+;; 		sideline-order-left 'down                    ; or 'up
+;; 		sideline-order-right 'up                     ; or 'down
+;; 		sideline-format-left "%s   "                 ; format for left aligment
+;; 		sideline-format-right "   %s"                ; format for right aligment
+;; 		sideline-priority 100                        ; overlays' priority
+;; 		sideline-display-backend-name t)             ; display the backend name
+;;   :hook (flycheck-mode . sideline-mode)
+;;   )
 
-(use-package sideline-flycheck :init (setq sideline-backends-right '(sideline-flycheck)) :hook (flycheck-mode . sideline-flycheck-setup))
-(use-package sideline-lsp :init (setq sideline-backends-right '(sideline-lsp)))
-(use-package sideline-blame :init (setq sideline-backends-left '((sideline-blame . up))))
+;; (use-package sideline-flycheck :init (setq sideline-backends-right '(sideline-flycheck)) :hook (flycheck-mode . sideline-flycheck-setup))
+;; (use-package sideline-lsp :init (setq sideline-backends-right '(sideline-lsp)))
+;; (use-package sideline-blame :init (setq sideline-backends-left '((sideline-blame . up))))
 
 (use-package avy
   :config
@@ -519,14 +519,14 @@ With argument ARG, do this that many times."
 		   gfm-mode markdown-mode
 		   dockerfile-ts-mode terraform-mode
 		   lua-mode python-ts-mode nix-mode) . lsp-deferred)
-		 (lsp-mode . sideline-mode)
+		 ;; (lsp-mode . sideline-mode)
          (lsp-mode . lsp-enable-which-key-integration)
 		 )
   :commands (lsp lsp-deferred)
   )
 
 (use-package lsp-ui
-  :init (setq lsp-ui-sideline-enable nil)
+  ;; :init (setq lsp-ui-sideline-enable nil)
   :commands lsp-ui-mode
   )
 
