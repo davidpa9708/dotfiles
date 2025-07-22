@@ -162,6 +162,10 @@ in {
     ##     "middlemouse.paste" = false;
     ##   };
     ## };
+	zoxide = {
+    	enable = true;
+    	options = [ "--cmd" "j" ];
+  	};
   };
 
   systemd.user = {
