@@ -1,15 +1,16 @@
+(defun start-term ()
+  (if (string-equal (buffer-name (current-buffer)) "*scratch*")
+	  (progn
+		(term "/bin/bash")
+		;; (term-line-mode)
+		(rename-uniquely)
+		)))
+
 (add-hook 'after-make-frame-functions
 		  (lambda (frame)
-			(select-frame frame) 
-			(if (string-equal (buffer-name (current-buffer)) "*scratch*")
-				(term))
-			)
-		  )
+			(select-frame frame)
+			(start-term)))
 
-(add-hook 'server-after-make-frame-hook
-		  (lambda ()
-			(if (string-equal (buffer-name (current-buffer)) "*scratch*")
-				(term))
-			)
-		  )
+
+(add-hook 'server-after-make-frame-hook 'start-term)
 

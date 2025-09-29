@@ -12,6 +12,7 @@
  warning-minimum-level :emergency
  search-whitespace-regexp ".*"
  ;;  project-mode-line t
+ speedbar-show-unknown-files t
 
  scroll-preserve-screen-position nil
  mouse-wheel-follow-mouse t
@@ -20,6 +21,7 @@
  ;; jit-lock-defer-time 0
  isearch-wrap-pause 'no
  column-number-mode t
+ project-mode-line t
  )
 
 ;; (cua-mode) ;; C-x to cut on selection https://www.emacswiki.org/emacs/CuaMode
@@ -30,7 +32,6 @@
 (tool-bar-mode -1)
 (menu-bar-mode -1)
 (global-hl-line-mode t)
-
 
 ;; (recent-mode)
 
@@ -242,6 +243,9 @@ With argument ARG, do this that many times."
  ("C-<prior>" . tab-previous)
  ("C-S-<next>" .  my/tab-bar-move-next)
  ("C-S-<prior>" .  my/tab-bar-move-previous)
+ ("C-!" .  hs-hide-level)
+ ("C-@" .  hs-show-all)
+ ("C-#" .  hs-toggle-hiding)
  )
 
 ;; (use-package undo-fu
@@ -413,10 +417,10 @@ With argument ARG, do this that many times."
   :config
   (solaire-global-mode +1))
 
-(use-package  spacemacs-theme
-  :config
-  ;; (load-theme 'spacemacs-dark)
-  )
+;; (use-package  spacemacs-theme
+;;   :config
+;;   (load-theme 'spacemacs-dark)
+;;   )
 
 
 ;; commenting due to some formatting issues
@@ -460,13 +464,13 @@ With argument ARG, do this that many times."
   :config
   (doom-modeline-mode))
 
+
 ;; (straight-use-package
 ;;  '(awesome-tray :type git :host github :repo "manateelazycat/awesome-tray.git")
 ;;  )
 
-;; (use-package dirvish
-;;   :config
-;;   (dirvish-override-dired-mode))
+;; (add-hook 'dired-mode-hook #'dired-hide-details-mode)
+(add-hook 'prog-mode-hook #'hs-minor-mode)
 
 (use-package envrc
   :config
@@ -486,11 +490,41 @@ With argument ARG, do this that many times."
 (use-package typescript-mode)
 
 (use-package lsp-mode
+  :preface
+  ;; (defun lsp-booster--advice-json-parse (old-fn &rest args)
+  ;;   "Try to parse bytecode instead of json."
+  ;;   (or
+  ;;    (when (equal (following-char) ?#)
+  ;;      (let ((bytecode (read (current-buffer))))
+  ;;        (when (byte-code-function-p bytecode)
+  ;;          (funcall bytecode))))
+  ;;    (apply old-fn args)))
+  ;; (advice-add (if (progn (require 'json)
+  ;;                        (fboundp 'json-parse-buffer))
+  ;;                 'json-parse-buffer
+  ;;               'json-read)
+  ;;             :around
+  ;;             #'lsp-booster--advice-json-parse)
+
+  ;; (defun lsp-booster--advice-final-command (old-fn cmd &optional test?)
+  ;;   "Prepend emacs-lsp-booster command to lsp CMD."
+  ;;   (let ((orig-result (funcall old-fn cmd test?)))
+  ;;     (if (and (not test?)                             ;; for check lsp-server-present?
+  ;;              (not (file-remote-p default-directory)) ;; see lsp-resolve-final-command, it would add extra shell wrapper
+  ;;              lsp-use-plists
+  ;;              (not (functionp 'json-rpc-connection))  ;; native json-rpc
+  ;;              (executable-find "emacs-lsp-booster"))
+  ;;         (progn
+  ;;           (when-let ((command-from-exec-path (executable-find (car orig-result))))  ;; resolve command from exec-path (in case not found in $PATH)
+  ;;             (setcar orig-result command-from-exec-path))
+  ;;           (message "Using emacs-lsp-booster for %s!" orig-result)
+  ;;           (cons "emacs-lsp-booster" orig-result))
+  ;;       orig-result)))
   :init
   (setq gc-cons-threshold 100000000)
   (setq read-process-output-max (* 1024 1024)) ;; 1mb
-  ;; set prefix for lsp-command-keymap (few alternatives - "C-l", "C-c l")
   (setq lsp-keymap-prefix "C-c l")
+  ;; (advice-add 'lsp-resolve-final-command :around #'lsp-booster--advice-final-command)
   :custom
   (lsp-inlay-hint-enable nil)
   (lsp-javascript-display-enum-member-value-hints t)
@@ -575,10 +609,56 @@ With argument ARG, do this that many times."
 ;; (use-package app-launcher
 ;;   :straight '(app-launcher :host github :repo "SebastienWae/app-launcher"))
 
-
 ;; https://github.com/domtronn/all-the-icons.el
 (use-package all-the-icons
   :if (display-graphic-p))
+
+
+(use-package dirvish
+  :init
+  (setq dirvish-attributes
+		(append
+		 ;; The order of these attributes is insignificant, they are always
+		 ;; displayed in the same position.
+		 '(vc-state subtree-state nerd-icons collapse)
+		 ;; Other attributes are displayed in the order they appear in this list.
+		 '(git-msg file-modes file-time file-size)))
+  (setq dired-listing-switches
+        "-l --almost-all --human-readable --group-directories-first --no-group")
+  ;; this command is useful when you want to close the window of `dirvish-side'
+  ;; automatically when opening a file
+  (put 'dired-find-alternate-file 'disabled nil)
+  :config
+  (dirvish-override-dired-mode)
+  (dirvish-side-follow-mode)
+  :bind
+  (
+   ("C-S-t" . dirvish-side)
+   :map dirvish-mode-map               ; Dirvish inherits `dired-mode-map'
+   (";"   . dired-up-directory)        ; So you can adjust `dired' bindings here
+   ("?"   . dirvish-dispatch)          ; [?] a helpful cheatsheet
+   ("a"   . dirvish-setup-menu)        ; [a]ttributes settings:`t' toggles mtime, `f' toggles fullframe, etc.
+   ("f"   . dirvish-file-info-menu)    ; [f]ile info
+   ("o"   . dirvish-quick-access)      ; [o]pen `dirvish-quick-access-entries'
+   ("s"   . dirvish-quicksort)         ; [s]ort flie list
+   ("r"   . dirvish-history-jump)      ; [r]ecent visited
+   ("l"   . dirvish-ls-switches-menu)  ; [l]s command flags
+   ("v"   . dirvish-vc-menu)           ; [v]ersion control commands
+   ("*"   . dirvish-mark-menu)
+   ("y"   . dirvish-yank-menu)
+   ("N"   . dirvish-narrow)
+   ("^"   . dirvish-history-last)
+   ("TAB" . dirvish-subtree-toggle)
+   ("M-f" . dirvish-history-go-forward)
+   ("M-b" . dirvish-history-go-backward)
+   ("M-e" . dirvish-emerge-menu)
+   )
+  )
+
+(use-package all-the-icons-dired
+  :hook
+  (dired-mode-hook . all-the-icons-dired-mode)
+  )
 
 (use-package nerd-icons
   ;; :custom
@@ -588,18 +668,22 @@ With argument ARG, do this that many times."
   ;; (nerd-icons-font-family "Symbols Nerd Font Mono")
   )
 
-
 (use-package perfect-margin
   :init
   (setq perfect-margin-only-set-left-margin t)
   :config (perfect-margin-mode 1))
 
-(use-package otpp
-  :straight t
-  :after project
-  :init
-  ;; Enable `otpp-mode` globally
-  (otpp-mode 1)
-  ;; If you want to advice the commands in `otpp-override-commands`
-  ;; to be run in the current's tab (so, current project's) root directory
-  (otpp-override-mode 1))
+
+;; new tab for each project:
+;; (use-package otpp
+;;   :straight t
+;;   :after project
+;;   :init
+;;   ;; Enable `otpp-mode` globally
+;;   (otpp-mode 1)
+;;   ;; If you want to advice the commands in `otpp-override-commands`
+;;   ;; to be run in the current's tab (so, current project's) root directory
+;;   (otpp-override-mode
+
+(set-frame-parameter nil 'alpha-background 100)
+(add-to-list 'default-frame-alist '(alpha-background . 100))

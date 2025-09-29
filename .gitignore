@@ -1,6 +1,7 @@
 emacs.d/*
 emacs.d.spacemacs/*
 !emacs.d/early-init.el
+!emacs.d/emacsterm.el
 !emacs.d/init.el
 !emacs.d.spacemacs/init.el
 
