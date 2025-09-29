@@ -73,6 +73,8 @@ in {
       #wmctrl
       #networkmanagerapplet
       flameshot
+
+	  # zed-editor
     ]);
 
     shellAliases = {
