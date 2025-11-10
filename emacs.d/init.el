@@ -10,8 +10,8 @@
  auto-save-default nil
  tab-width 4
  warning-minimum-level :emergency
- search-whitespace-regexp ".*"
- ;;  project-mode-line t
+ ;; search-whitespace-regexp ".*"
+ ;; project-mode-line t
  speedbar-show-unknown-files t
 
  scroll-preserve-screen-position nil
@@ -22,16 +22,22 @@
  isearch-wrap-pause 'no
  column-number-mode t
  project-mode-line t
+ enable-recursive-minibuffers t
+
+ ;; org
+ org-support-shift-select t
  )
 
 ;; (cua-mode) ;; C-x to cut on selection https://www.emacswiki.org/emacs/CuaMode
 ;; (transient-mark-mode nil)
-;; (global-display-line-numbers-mode) ;; display line numbers
+(global-display-line-numbers-mode) ;; display line numbers
 ;; (electric-pair-mode)
 (scroll-bar-mode -1)
 (tool-bar-mode -1)
 (menu-bar-mode -1)
 (global-hl-line-mode t)
+(delete-selection-mode 1)
+(global-auto-revert-mode)
 
 ;; (recent-mode)
 
@@ -90,6 +96,7 @@
   "Scroll down and recenter."
   (interactive "^")
   (forward-line (/ (window-total-height) 2))
+  (back-to-indentation)
   (recenter)
   )
 
@@ -97,6 +104,7 @@
   "Scroll up and recenter."
   (interactive "^")
   (forward-line (- (/ (window-total-height) 2)))
+  (back-to-indentation)
   (recenter)
   )
 
@@ -189,12 +197,14 @@ With argument ARG, do this that many times."
   (interactive)
   (tab-bar-move-tab -1))
 
+
+;; keybindings
 (bind-keys
  ;; navigation
- ("C-<right>" .  my/right-word)
- ("C-<left>" .  my/left-word)
- ("C-<delete>" . my/kill-word)
- ("C-<backspace>" . my/backward-kill-word)
+ ;; ("C-<right>" .  my/right-word)
+ ;; ("C-<left>" .  my/left-word)
+ ;; ("C-<delete>" . my/kill-word)
+ ;; ("C-<backspace>" . my/backward-kill-word)
  ("<next>" . my/next)
  ("<prior>" . my/prior)
  ("<home>" . back-to-indentation) ;; https://stackoverflow.com/a/12346740
@@ -221,21 +231,21 @@ With argument ARG, do this that many times."
  ("C-S-p" . project-switch-project)
  ("<mouse-3>" . context-menu-open)
  ("C-o" . find-file)
- ("C-i" . imenu)
- ;; ("C-l" . nil) ; lsp-prefix
+ ;; ("C-i" . imenu)	
+ ("C-l" . nil) ; lsp-prefix
  ;; ("<escape>" . keyboard-escape-quit)
- ;; ("<end>" . move-end-of-line)
- ("TAB" . self-insert-command)
- ;; ("M-?" . goto-line)
- ;; ("C-<escape>" . keyboard-quit)
- ;; ("C-o" . other-window)
- ;; ("C-:" . my/view-buffer-other-frame)
+ ("<end>" . move-end-of-line)
+ ;; ("TAB" . self-insert-command)
+ ("M-?" . goto-line)
+ ("C-<escape>" . keyboard-quit)
+ ("C-o" . other-window)
+ ("C-:" . my/view-buffer-other-frame)
  ;; ("C-1" . delete-other-windows)
  ;; ("C-2" . split-window-below)
  ;; ("C-3" . split-window-right)
  ;; ("C-0" . delete-window)
  ;; ("C-;" . query-replace-regexp)
- ;; ("C-S-SPC" . exchange-point-and-mark)
+ ("C-S-SPC" . exchange-point-and-mark)
  ;; ("C-SPC" . execute-extended-command)
  ("C-S-w" . tab-close)
  ("C-S-t" . tab-new)
@@ -248,16 +258,16 @@ With argument ARG, do this that many times."
  ("C-#" .  hs-toggle-hiding)
  )
 
-;; (use-package undo-fu
-;;   :init
-;;   ;; https://github.com/emacsmirror/undo-fu?tab=readme-ov-file#undo-limits
-;;   (setq undo-limit 67108864) ; 64mb.
-;;   (setq undo-strong-limit 100663296) ; 96mb.
-;;   (setq undo-outer-limit 1006632960) ; 960mb.
-;;   :config
-;;   (bind-keys
-;;    ("C-z" . undo-fu-only-undo)
-;;    ("C-S-z" . undo-fu-only-redo)))
+(use-package undo-fu
+  :init
+  ;; https://github.com/emacsmirror/undo-fu?tab=readme-ov-file#undo-limits
+  (setq undo-limit 67108864) ; 64mb.
+  (setq undo-strong-limit 100663296) ; 96mb.
+  (setq undo-outer-limit 1006632960) ; 960mb.
+  :config
+  (bind-keys
+   ("C-z" . undo-fu-only-undo)
+   ("C-S-z" . undo-fu-only-redo)))
 
 ;; (use-package minimap
 ;;   :init
@@ -378,7 +388,7 @@ With argument ARG, do this that many times."
     (consult-line (my/get-selected-text))
     )
   (bind-keys
-   ([remap isearch-forward] . my/file-search)
+   ;; ([remap isearch-forward] . my/file-search)
    ([remap load-theme] . consult-theme)
    ([remap goto-line] . consult-goto-line)
    ([remap switch-to-buffer] . consult-buffer)
@@ -386,7 +396,7 @@ With argument ARG, do this that many times."
    ([remap project-switch-to-buffer] . consult-project-buffer)
    ([remap project-find-file] . consult-fd)
    ("C-S-v" . consult-yank-from-kill-ring)
-   ;; b			 ("C-/" . consult-global-mark)
+   ;; ;; ("C-/" . consult-global-mark)
    ([remap imenu] . consult-imenu)
    ([remap Info-search] . consult-info)
    ))
@@ -398,7 +408,7 @@ With argument ARG, do this that many times."
 
 (use-package ef-themes
   :config
-  ;; (load-theme 'ef-owl t)
+  (load-theme 'ef-owl t)
   )
 
 (use-package doom-themes
@@ -410,12 +420,12 @@ With argument ARG, do this that many times."
   ;; for treemacs users
   ;; (doom-themes-treemacs-theme "doom-atom") ; use "doom-colors" for less minimal icon theme
   :config
-  (load-theme 'doom-bluloco-dark t)
+  ;; (load-theme 'doom-bluloco-dark t)
   )
 
-(use-package solaire-mode
-  :config
-  (solaire-global-mode +1))
+;; (use-package solaire-mode
+;;   :config
+;; (solaire-global-mode +1))
 
 ;; (use-package  spacemacs-theme
 ;;   :config
@@ -440,7 +450,7 @@ With argument ARG, do this that many times."
 
 (use-package magit
   :bind
-  ("M-g" .  magit-file-dispatch)
+  ;; ("M-g" .  magit-file-dispatch)		
   ("M-G" .  magit-status)
   )
 
@@ -567,8 +577,8 @@ With argument ARG, do this that many times."
 (use-package flycheck
   :config
   (add-hook 'after-init-hook #'global-flycheck-mode)
-  (bind-keys ([remap next-error] . flycheck-next-error)))
-(bind-keys ([remap previous-error] . flycheck-previous-error))
+  (bind-keys ([remap next-error] . flycheck-next-error))
+  (bind-keys ([remap previous-error] . flycheck-previous-error)))
 
 (use-package consult-flycheck
   :config
@@ -614,46 +624,46 @@ With argument ARG, do this that many times."
   :if (display-graphic-p))
 
 
-(use-package dirvish
-  :init
-  (setq dirvish-attributes
-		(append
-		 ;; The order of these attributes is insignificant, they are always
-		 ;; displayed in the same position.
-		 '(vc-state subtree-state nerd-icons collapse)
-		 ;; Other attributes are displayed in the order they appear in this list.
-		 '(git-msg file-modes file-time file-size)))
-  (setq dired-listing-switches
-        "-l --almost-all --human-readable --group-directories-first --no-group")
-  ;; this command is useful when you want to close the window of `dirvish-side'
-  ;; automatically when opening a file
-  (put 'dired-find-alternate-file 'disabled nil)
-  :config
-  (dirvish-override-dired-mode)
-  (dirvish-side-follow-mode)
-  :bind
-  (
-   ("C-S-t" . dirvish-side)
-   :map dirvish-mode-map               ; Dirvish inherits `dired-mode-map'
-   (";"   . dired-up-directory)        ; So you can adjust `dired' bindings here
-   ("?"   . dirvish-dispatch)          ; [?] a helpful cheatsheet
-   ("a"   . dirvish-setup-menu)        ; [a]ttributes settings:`t' toggles mtime, `f' toggles fullframe, etc.
-   ("f"   . dirvish-file-info-menu)    ; [f]ile info
-   ("o"   . dirvish-quick-access)      ; [o]pen `dirvish-quick-access-entries'
-   ("s"   . dirvish-quicksort)         ; [s]ort flie list
-   ("r"   . dirvish-history-jump)      ; [r]ecent visited
-   ("l"   . dirvish-ls-switches-menu)  ; [l]s command flags
-   ("v"   . dirvish-vc-menu)           ; [v]ersion control commands
-   ("*"   . dirvish-mark-menu)
-   ("y"   . dirvish-yank-menu)
-   ("N"   . dirvish-narrow)
-   ("^"   . dirvish-history-last)
-   ("TAB" . dirvish-subtree-toggle)
-   ("M-f" . dirvish-history-go-forward)
-   ("M-b" . dirvish-history-go-backward)
-   ("M-e" . dirvish-emerge-menu)
-   )
-  )
+;; (use-package dirvish
+;;   :init
+;;   (setq dirvish-attributes
+;; 		(append
+;; 		 ;; The order of these attributes is insignificant, they are always
+;; 		 ;; displayed in the same position.
+;; 		 '(vc-state subtree-state nerd-icons collapse)
+;; 		 ;; Other attributes are displayed in the order they appear in this list.
+;; 		 '(git-msg file-modes file-time file-size)))
+;;   (setq dired-listing-switches
+;;         "-l --almost-all --human-readable --group-directories-first --no-group")
+;;   ;; this command is useful when you want to close the window of `dirvish-side'
+;;   ;; automatically when opening a file
+;;   (put 'dired-find-alternate-file 'disabled nil)
+;;   :config
+;;   (dirvish-override-dired-mode)
+;;   (dirvish-side-follow-mode)
+;;   :bind
+;;   (
+;;    ("C-S-t" . dirvish-side)
+;;    :map dirvish-mode-map               ; Dirvish inherits `dired-mode-map'
+;;    (";"   . dired-up-directory)        ; So you can adjust `dired' bindings here
+;;    ("?"   . dirvish-dispatch)          ; [?] a helpful cheatsheet
+;;    ("a"   . dirvish-setup-menu)        ; [a]ttributes settings:`t' toggles mtime, `f' toggles fullframe, etc.
+;;    ("f"   . dirvish-file-info-menu)    ; [f]ile info
+;;    ("o"   . dirvish-quick-access)      ; [o]pen `dirvish-quick-access-entries'
+;;    ("s"   . dirvish-quicksort)         ; [s]ort flie list
+;;    ("r"   . dirvish-history-jump)      ; [r]ecent visited
+;;    ("l"   . dirvish-ls-switches-menu)  ; [l]s command flags
+;;    ("v"   . dirvish-vc-menu)           ; [v]ersion control commands
+;;    ("*"   . dirvish-mark-menu)
+;;    ("y"   . dirvish-yank-menu)
+;;    ("N"   . dirvish-narrow)
+;;    ("^"   . dirvish-history-last)
+;;    ("TAB" . dirvish-subtree-toggle)
+;;    ("M-f" . dirvish-history-go-forward)
+;;    ("M-b" . dirvish-history-go-backward)
+;;    ("M-e" . dirvish-emerge-menu)
+;;    )
+;;   )
 
 (use-package all-the-icons-dired
   :hook
@@ -685,5 +695,5 @@ With argument ARG, do this that many times."
 ;;   ;; to be run in the current's tab (so, current project's) root directory
 ;;   (otpp-override-mode
 
-(set-frame-parameter nil 'alpha-background 100)
-(add-to-list 'default-frame-alist '(alpha-background . 100))
+;; (set-frame-parameter nil 'alpha-background 80)
+;; (add-to-list 'default-frame-alist '(alpha-background . 80))
