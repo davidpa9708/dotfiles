@@ -12,7 +12,7 @@ in {
       ## essentials
       starship
       #git
-      # syncthing
+      syncthing
       #ranger
 
       ## editors
@@ -31,7 +31,7 @@ in {
       #libreoffice-qt
       #qutebrowser
       #keepassxc
-      #logseq
+      logseq
       #thunderbird
       #ungoogled-chromium
       #vlc
@@ -51,6 +51,7 @@ in {
       ## others
       # libsForQt5.polonium
       #nixfmt-classic
+	  nixfmt-rfc-style
       #protonvpn-cli_2
       fd
       ripgrep
@@ -192,4 +193,9 @@ in {
 	  };
 	};
   };
+
+  nixpkgs.config.permittedInsecurePackages = [
+	"electron-27.3.11"
+  ];
+  
 }
