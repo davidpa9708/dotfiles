@@ -24,6 +24,8 @@
  project-mode-line t
  enable-recursive-minibuffers t
 
+ minibuffer-follows-selected-frame nil ;; https://www.gnu.org/software/emacs/manual/html_node/emacs/Basic-Minibuffer.html
+
  ;; org
  org-support-shift-select t
  )
