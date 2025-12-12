@@ -697,3 +697,6 @@ With argument ARG, do this that many times."
 
 ;; (set-frame-parameter nil 'alpha-background 80)
 ;; (add-to-list 'default-frame-alist '(alpha-background . 80))
+
+(use-package kanata-kbd-mode
+  :straight '(kanata-kbd-mode :host github :repo "chmouel/kanata-kbd-mode"))
