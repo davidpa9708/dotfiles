@@ -4,76 +4,92 @@
 	tab  q    w    e    r    t    y    u    i    o    p    [    ]    \
 	caps a    s    d    f    g    h    j    k    l    ;    '    ret
 	lsft z    x    c    v    b    n    m    ,    .    /    rsft
-	lctl lmet lalt           spc            ralt prnt rctl wkup
-	)
+	lctl wkup lmet lalt      spc            ralt prnt rctl fn
+    <
+)
 
 (deflocalkeys-linux
   fn  464
   <   86
 )
 
+(defvar
+  tap-repress-timeout   200
+  hold-timeout  200
+  tt $tap-repress-timeout
+  ht 400
+
+  colemak (layer-switch colemak-dh)
+  qwerty  (layer-switch qwerty)
+  symbols (layer-while-held symbols)
+)
+
 
 (defalias
-  col (layer-switch colemak-dh)
-  qwt (layer-switch qwerty)
+  col $colemak
+  qwt $qwerty
 
   ;; modifiers
   ;; tab (tap-hold-press 200 200 tab (layer-while-held symbols))
   tab tab
-  cap (tap-hold-press 200 200 esc lctl)
-  sft lalt
+  cap (tap-hold-release 0 $tt esc lctl)
+  sft (one-shot $ht lalt)
 
-  ctl (layer-while-held symbols)
-  met lmet
+  ctl $symbols
+  met lmet ;; (one-shot $tt lmet)
   ;; alt (tap-hold-press 200 200 tab lshft)
-  alt lshft
+  alt (one-shot $tt lshft)
+  fn  fn
 
   ;; spc spc
-  spc (tap-hold-release 0 200 spc (layer-while-held navigation))
+  spc (tap-hold-release 0 $tt spc (layer-while-held navigation))
 
   art (layer-while-held navigation)
-  ;; art (tap-hold-release 0 200 S-tab (layer-while-held navigation))
   mer (layer-while-held symbols)
   ctr (layer-while-held symbols)
 
-  rsf (tap-hold-release 0 200 S-0 rsft)
+  rsf rsft
 
-  a (tap-hold-release 0 200 a lctl)
-  o (tap-hold-release 0 200 o rctl)
-  z (tap-hold-release 0 200 z lalt)
-  / (tap-hold-release 0 200 / ralt)
-  )
+  a (tap-hold-release 0 $tt a lshft)
+  o (tap-hold-release 0 $tt o rshft)
+  z (tap-hold-release 0 $tt z lctl)
+  / (tap-hold-release 0 $tt / rctl)
+)
 
 (deflayer colemak-dh
 	grv  1    2    3    4    5    6    7    8    9    0    -    =    bspc
- 	@tab q    w    f    p    b    j    l    u    y    ;    [    ]    \
-	@cap a    r    s    t    g    m    n    e    i    o    '    ret
+ 	@tab q    w    f    p    b    j    l    u    y    ;    _    _    _
+	@cap @a   r    s    t    g    m    n    e    i    @o   _    _
 	@sft @z   x    c    d    v    k    h    ,    .    @/   @rsf
-	@ctl @met @alt           @spc           @art @mer rctl @qwt
-	)
+	@ctl @fn  @met @alt      @spc           @art @mer rctl @qwt
+	<
+)
 
 (deflayer qwerty
 	grv  1    2    3    4    5    6    7    8    9    0    -    =    bspc
-	tab  q    w    e    r    t    y    u    i    o    p    [    ]    \
-	caps a    s    d    f    g    h    j    k    l    ;    '    ret
+	tab  q    w    e    r    t    y    u    i    o    p    _    _    _
+	caps a    s    d    f    g    h    j    k    l    ;    _    _
 	lsft z    x    c    v    b    n    m    ,    .    /    rsft
-	lctl lmet lalt           spc            ralt prnt rctl @col
-	)
+	lctl @fn  lmet lalt      spc            ralt prnt rctl @col
+	<
+)
 
 (deflayer navigation
 	grv  1    2    3    4    5    6    7    8    9    0    -    =    bspc
-	@tab q    w    f    p    b    j    home up   end  ;    [    ]    \
-	@cap a    r    s    t    g    pgup left down rght ret  '    ret
-	@sft @z   x    c    d    v    pgdn bspc spc  del  @/    @rsf
-	@ctl @met @alt           @spc           @art @mer rctl @qwt
-	)
+	@tab _    _    _    _    _    _    home up   end  ;    _    _    _
+	@cap @a   _    _    _    _    pgup left down rght ret  _    _
+	@sft @z   _    _    _    _    pgdn bspc spc  del  @/    @rsf
+	@ctl @fn  @met @alt      @spc           @art @mer rctl @qwt
+	<
+)
 
 
 (deflayer symbols
 	grv  f1   f2   f3   f4   f5   f6   f7   f8   f9   f10  f11  f12  bspc
-	@tab mute vold volu brdn brup `    [    ]    S-[  S-]  [    ]    \
-	@cap 1    2    3    4    5    6    7    8    9    0   '    ret
+	@tab mute vold volu brdn brup `    [    ]    S-[  S-]  _    _    _
+	@cap 1    2    3    4    5    6    7    8    9    0    _    _
 	@sft S-1  S-2  S-3  S-4  S-5  S-6  S-7  S-8  S-9  S-0  @rsf
-	@ctl @met @alt           @spc           @art @mer rctl @qwt
-	)
+    @ctl @fn  @met @alt      @spc           @art @mer rctl @qwt
+    <
+)
 
