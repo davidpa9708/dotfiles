@@ -24,11 +24,20 @@
  project-mode-line t
  enable-recursive-minibuffers t
 
- minibuffer-follows-selected-frame nil ;; https://www.gnu.org/software/emacs/manual/html_node/emacs/Basic-Minibuffer.html
+ minibuffer-follows-selected-frame nil ;; don't show minibuffer on other frames https://www.gnu.org/software/emacs/manual/html_node/emacs/Basic-Minibuffer.html
+
+ enable-recursive-minibuffers t ;; https://www.gnu.org/software/emacs/manual/html_node/emacs/Minibuffer-Edit.html
 
  ;; org
  org-support-shift-select t
+
+ ;; https://www.gnu.org/software/emacs/manual/html_node/emacs/Useless-Whitespace.html
+ trailing-whitespace t
+ ;; indicate-empty-lines t
  )
+
+(desktop-save-mode 1)
+
 
 ;; (cua-mode) ;; C-x to cut on selection https://www.emacswiki.org/emacs/CuaMode
 ;; (transient-mark-mode nil)
@@ -40,6 +49,7 @@
 (global-hl-line-mode t)
 (delete-selection-mode 1)
 (global-auto-revert-mode)
+(minibuffer-depth-indicate-mode) ;; https://www.gnu.org/software/emacs/manual/html_node/emacs/Minibuffer-Edit.html
 
 ;; (recent-mode)
 
@@ -233,15 +243,15 @@ With argument ARG, do this that many times."
  ("C-S-p" . project-switch-project)
  ("<mouse-3>" . context-menu-open)
  ("C-o" . find-file)
- ;; ("C-i" . imenu)	
- ("C-l" . nil) ; lsp-prefix
+ ;; ("C-i" . imenu)
+ ;; ("C-l" . nil) ; lsp-prefix
  ;; ("<escape>" . keyboard-escape-quit)
  ("<end>" . move-end-of-line)
  ;; ("TAB" . self-insert-command)
  ("M-?" . goto-line)
  ("C-<escape>" . keyboard-quit)
- ("C-o" . other-window)
- ("C-:" . my/view-buffer-other-frame)
+ ;; ("C-o" . other-window)
+ ;; ("C-:" . my/view-buffer-other-frame)
  ;; ("C-1" . delete-other-windows)
  ;; ("C-2" . split-window-below)
  ;; ("C-3" . split-window-right)
@@ -249,8 +259,8 @@ With argument ARG, do this that many times."
  ;; ("C-;" . query-replace-regexp)
  ("C-S-SPC" . exchange-point-and-mark)
  ;; ("C-SPC" . execute-extended-command)
- ("C-S-w" . tab-close)
- ("C-S-t" . tab-new)
+ ;; ("C-S-w" . tab-close)
+ ;; ("C-S-t" . tab-new)
  ("C-<next>" . tab-next)
  ("C-<prior>" . tab-previous)
  ("C-S-<next>" .  my/tab-bar-move-next)
@@ -275,7 +285,7 @@ With argument ARG, do this that many times."
 ;;   :init
 ;;   (setq minimap-window-location 'right)
 ;;   (setq minimap-width-fraction 0.15)
-;;   (setq minimap-update-delay 0)
+;;   (setq     minimap-update-delay 0)
 ;;   :config
 ;;   (minimap-mode))
 
@@ -310,16 +320,16 @@ With argument ARG, do this that many times."
   :init
   ;; (setq dimmer-adjustment-mode 'both)
   (setq dimmer-fraction 0.4)
-  
+
   :config (dimmer-mode))
 
 
 (windmove-default-keybindings '(meta))
 (windmove-swap-states-default-keybindings '(meta shift))
 
-(use-package golden-ratio
-  :config
-  (golden-ratio-mode))
+;; (use-package golden-ratio
+;;   :config
+;;   (golden-ratio-mode))
 
 (use-package buffer-name-relative
   :config
@@ -413,17 +423,17 @@ With argument ARG, do this that many times."
   (load-theme 'ef-owl t)
   )
 
-(use-package doom-themes
-  :ensure t
-  :custom
-  ;; Global settings (defaults)
-  (doom-themes-enable-bold t)   ; if nil, bold is universally disabled
-  (doom-themes-enable-italic t) ; if nil, italics is universally disabled
-  ;; for treemacs users
-  ;; (doom-themes-treemacs-theme "doom-atom") ; use "doom-colors" for less minimal icon theme
-  :config
-  ;; (load-theme 'doom-bluloco-dark t)
-  )
+;; (use-package doom-themes
+;;   :ensure t
+;;   :custom
+;;   ;; Global settings (defaults)
+;;   (doom-themes-enable-bold t)   ; if nil, bold is universally disabled
+;;   (doom-themes-enable-italic t) ; if nil, italics is universally disabled
+;;   ;; for treemacs users
+;;   ;; (doom-themes-treemacs-theme "doom-atom") ; use "doom-colors" for less minimal icon theme
+;;   :config
+;;   ;; (load-theme 'doom-bluloco-dark t)
+;;   )
 
 ;; (use-package solaire-mode
 ;;   :config
@@ -452,7 +462,7 @@ With argument ARG, do this that many times."
 
 (use-package magit
   :bind
-  ;; ("M-g" .  magit-file-dispatch)		
+  ;; ("M-g" .  magit-file-dispatch)
   ("M-G" .  magit-status)
   )
 
