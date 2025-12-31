@@ -1,17 +1,1 @@
-# .files
-
-## [home-manager](https://nix-community.github.io/home-manager/index.xhtml#sec-install-standalone)
-
-```sh
-nix-channel --add https://github.com/nix-community/home-manager/archive/release-23.11.tar.gz home-manager
-
-nix-channel --update
-
-nix-shell '<home-manager>' -A install
-
-rm -rf ~/.config/home-manager
-
-git clone https://github.com/davidpa9708/dotfiles.git
-
-home-manager switch -f ./dotfiles/home.nix
-```
+see https://codeberg.org/davidpa/dotfiles/src/branch/main
